@@ -3,13 +3,15 @@
 #include <string.h>
 #include "../include/listaEncadeada.h"
 #include "listaEncadeada.c"
-// #include "../include/listaCircular.h"
+#include "../include/listaCircular.h"
+// #include "listaCircular.c"
 // #include "../include/listaDuplamente.h"
 // #include "../include/fila.h"
 // #include "../include/pilha.h"
 
 int main() {
     DataTarefa* lista = NULL;
+    TarefasConcluidas* historico = criarTC(10);
     int op;
 
     do {
@@ -17,6 +19,8 @@ int main() {
         printf("1 - Adicionar tarefa\n");
         printf("2 - Imprimir Tarefas\n");
         printf("3 - Remover tarefa\n");
+        printf("4 - Concluir uma tarefa\n");
+        printf("5 - Historico de tarefas concluidas\n");
         printf("0 - SAIR\n");
         printf("----------------------------------------------\n");
         printf("Escolha uma opcao: ");
@@ -49,6 +53,7 @@ int main() {
                 }
 
                 inserirTarefaData(&lista, data, descricao, prioridade, 1);
+
                 inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, 1);
                 inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, 1);
                 inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, 1);
@@ -72,8 +77,22 @@ int main() {
 
                 break;
             }
+            case 4: { 
+                int idConcluida;
+
+                imprimirTarefasPorData(lista);
+                printf("Informe o ID da tarefa: ");
+                scanf("%d", &idConcluida);
+                concluirTarefa(&lista, historico, idConcluida);;
+                break;
+            }
+            case 5:
+                imprimirTC(historico);
+                break;
             case 0:
                 printf("Saindo do programa...\n");
+                liberarTarefaData(lista);
+                liberarTC(historico);
                 exit(0); 
                 break;
             default:

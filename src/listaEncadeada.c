@@ -3,6 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 #include "../include/listaEncadeada.h"
+#include "../include/listaCircular.h"
+#include "listaCircular.c"
 
 int calcularId(char* data, int cont){
     int dia, mes, ano;
@@ -118,6 +120,47 @@ DataTarefa* removerTarefaData(DataTarefa* listaData, int idBusca) {
     }
 
     return listaData;
+}
+
+void concluirTarefa(DataTarefa** listaData, TarefasConcluidas* concluidas, int id) {
+    DataTarefa* atual = *listaData;
+    DataTarefa* anteriorData = NULL;
+
+    while (atual != NULL) {
+        TAREFA* tarefa = atual->tarefas;
+        TAREFA* anteriorTarefa = NULL;
+
+        while (tarefa != NULL) {
+            if (tarefa->id == id) {
+                tarefa->status = 0;  
+                printf("Tarefa ID %d foi marcada como CONCLUIDA!\n", id);
+
+                if (anteriorTarefa == NULL) {
+                    atual->tarefas = tarefa->prox;  
+                } else {
+                    anteriorTarefa->prox = tarefa->prox;  
+                }
+
+                addTarefaConcluida(concluidas, tarefa);
+
+                if (atual->tarefas == NULL) {
+                    printf("Todas as tarefas da data %s foram concluidas. Removendo a data...\n", atual->data);
+                    if (anteriorData == NULL) {
+                        *listaData = atual->prox;  
+                    } else {
+                        anteriorData->prox = atual->prox;  
+                    }
+                    free(atual);
+                }
+                return; 
+            }
+            anteriorTarefa = tarefa;
+            tarefa = tarefa->prox;
+        }
+        anteriorData = atual;
+        atual = atual->prox;
+    }
+    printf("Tarefa com ID %d nao encontrada!\n", id);
 }
 
 void imprimirTarefasPorData(DataTarefa* lista){

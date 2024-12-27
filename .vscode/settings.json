@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "listaencadeada.h": "c"
+        "listaencadeada.h": "c",
+        "string.h": "c",
+        "stdio.h": "c",
+        "listacircular.h": "c"
     }
 }

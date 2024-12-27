@@ -1,17 +1,19 @@
 #ifndef LISTA_CIRCULAR_H
 #define LISTA_CIRCULAR_H
+#include "listaEncadeada.h" 
 
-typedef struct TarefaConcluida {
-    int id;
-    char descricao[300];
-    struct TarefaConcluida* prox;
-}TarefaConcluida;
+typedef struct TAREFA TAREFA;
 
-typedef struct LC {
-    TarefaConcluida* tarefaMaisAntiga;
-    TarefaConcluida* tarefaMaisRecente;
+typedef struct TarefasConcluidas {
+    TAREFA* tarefaMaisAntiga;
+    TAREFA* tarefaMaisRecente;
     int tamanho;
     int capacidade;
-}LC;
+}TarefasConcluidas;
+
+TarefasConcluidas* criarTC(int capacidade);
+void addTarefaConcluida(TarefasConcluidas* concluidas, TAREFA* lista);
+void imprimirTC(TarefasConcluidas* concluidas);
+void liberarTC(TarefasConcluidas* concluidas);
 
 #endif 

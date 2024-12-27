@@ -1,6 +1,8 @@
 #ifndef LISTA_ENCADEADA_H
 #define LISTA_ENCADEADA_H
 
+typedef struct TarefasConcluidas TarefasConcluidas;
+
 typedef struct TAREFA{
     int id;
     char descricao[300];
@@ -23,6 +25,7 @@ void inserirTarefa(TAREFA** lista, int id, int status, char* descricao, int prio
 void inserirTarefaData(DataTarefa** listaData, char* data, char* descricao, int prioridade, int status);
 TAREFA* removerTarefa(TAREFA* lista, int idBusca);
 DataTarefa* removerTarefaData(DataTarefa* listaData, int idBusca);
+void concluirTarefa(DataTarefa** listaData, TarefasConcluidas* concluidas, int id);
 void imprimirTarefasPorData(DataTarefa* lista);
 void liberarTarefas(TAREFA* lista);
 void liberarTarefaData(DataTarefa* lista);
