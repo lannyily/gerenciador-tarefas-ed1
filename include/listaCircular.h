@@ -3,6 +3,8 @@
 #include "listaEncadeada.h" 
 
 typedef struct TAREFA TAREFA;
+typedef struct DataTarefa DataTarefa;
+typedef struct TarefasOrdenada TarefasOrdenada;
 
 typedef struct TarefasConcluidas {
     TAREFA* tarefaMaisAntiga;

@@ -2,11 +2,12 @@
 #define LISTA_ENCADEADA_H
 
 typedef struct TarefasConcluidas TarefasConcluidas;
+typedef struct TarefasOrdenada TarefasOrdenada;
 
 typedef struct TAREFA{
     int id;
     char descricao[300];
-    int prioridede; // 1 - Alta, 2 - Média e 3 - Baixa
+    int prioridade; // 1 - Alta, 2 - Média e 3 - Baixa
     int status; // 1 - Não Concluida e 0 - Concluida
     struct TAREFA* prox;
 }TAREFA;

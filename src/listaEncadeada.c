@@ -20,7 +20,7 @@ TAREFA* criarTarefa(char* decricao, int prioridade, int status, int id){
     novaTarefa->id = id;
     novaTarefa->status = status;
     strcpy(novaTarefa->descricao, decricao);
-    novaTarefa->prioridede = prioridade;
+    novaTarefa->prioridade = prioridade;
     novaTarefa->prox = NULL;
     return novaTarefa;
 }
@@ -175,7 +175,7 @@ void imprimirTarefasPorData(DataTarefa* lista){
         printf("---------------------------------------------\n");
         TAREFA* auxTarefa = auxData->tarefas;
         while (auxTarefa != NULL){
-            printf(" ID: %d\n Tarefa: %s\n Prioridade: %d\n Status: %d\n", auxTarefa->id, auxTarefa->descricao, auxTarefa->prioridede, auxTarefa->status);
+            printf(" ID: %d\n Tarefa: %s\n Prioridade: %d\n Status: %d\n", auxTarefa->id, auxTarefa->descricao, auxTarefa->prioridade, auxTarefa->status);
             printf("---------------------------------------------\n");
             auxTarefa = auxTarefa->prox;
         }

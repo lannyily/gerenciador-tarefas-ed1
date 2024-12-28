@@ -51,7 +51,7 @@ void imprimirTC(TarefasConcluidas* concluidas){
     TAREFA* inicial = concluidas->tarefaMaisAntiga;
 
     do {
-        printf(" ID: %d\n Tarefa: %s\n Prioridade: %d\n Status: %d\n", atual->id, atual->descricao, atual->prioridede, atual->status);
+        printf(" ID: %d\n Tarefa: %s\n Prioridade: %d\n Status: %d\n", atual->id, atual->descricao, atual->prioridade, atual->status);
         atual = atual->prox;
     } while (atual != inicial);
 

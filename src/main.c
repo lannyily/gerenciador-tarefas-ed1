@@ -4,23 +4,25 @@
 #include "../include/listaEncadeada.h"
 #include "listaEncadeada.c"
 #include "../include/listaCircular.h"
-// #include "listaCircular.c"
-// #include "../include/listaDuplamente.h"
+#include "../include/listaDuplamente.h"
+#include "listaDuplamente.c"
 // #include "../include/fila.h"
 // #include "../include/pilha.h"
 
 int main() {
     DataTarefa* lista = NULL;
     TarefasConcluidas* historico = criarTC(10);
+    TarefasOrdenadas* listaOrdenada = NULL;
     int op;
 
     do {
         printf("-------------------- MENU --------------------\n");
         printf("1 - Adicionar tarefa\n");
-        printf("2 - Imprimir Tarefas\n");
+        printf("2 - Imprimir tarefas\n");
         printf("3 - Remover tarefa\n");
         printf("4 - Concluir uma tarefa\n");
         printf("5 - Historico de tarefas concluidas\n");
+        printf("6 - Imprimir tarefas ordenadas\n");
         printf("0 - SAIR\n");
         printf("----------------------------------------------\n");
         printf("Escolha uma opcao: ");
@@ -89,10 +91,15 @@ int main() {
             case 5:
                 imprimirTC(historico);
                 break;
+            case 6:
+                ordenarTarefasDeDataNaListaDupla(lista, &listaOrdenada);
+                imprimirTarefasOrdenadas(listaOrdenada);
+                break;
             case 0:
                 printf("Saindo do programa...\n");
                 liberarTarefaData(lista);
                 liberarTC(historico);
+                liberarTarefasOrdenadas(listaOrdenada);
                 exit(0); 
                 break;
             default:

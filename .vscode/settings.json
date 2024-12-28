@@ -3,6 +3,7 @@
         "listaencadeada.h": "c",
         "string.h": "c",
         "stdio.h": "c",
-        "listacircular.h": "c"
+        "listacircular.h": "c",
+        "listaduplamente.h": "c"
     }
 }
