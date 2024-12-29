@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "../include/listaEncadeada.h"
 #include "../include/listaCircular.h"
+#include "../include/pilha.h"
 #include "listaCircular.c"
 
 int calcularId(char* data, int cont){
@@ -12,13 +13,13 @@ int calcularId(char* data, int cont){
     return (dia * 1000) + (mes * 100) + cont;
 }
 
-TAREFA* criarTarefa(char* decricao, int prioridade, int status, int id){
+TAREFA* criarTarefa(char* decricao, int prioridade, char* status, int id){
     TAREFA* novaTarefa = (TAREFA*)malloc(sizeof(TAREFA));
     if (!novaTarefa){
         exit(1);
     }
     novaTarefa->id = id;
-    novaTarefa->status = status;
+    strcpy(novaTarefa->status, status);
     strcpy(novaTarefa->descricao, decricao);
     novaTarefa->prioridade = prioridade;
     novaTarefa->prox = NULL;
@@ -37,7 +38,7 @@ DataTarefa* criarDataTarefa(char* data){
     return novaData;
 }
 
-void inserirTarefa(TAREFA** lista, int id, int status, char* descricao, int prioridade){
+void inserirTarefa(TAREFA** lista, int id, char* status, char* descricao, int prioridade){
     TAREFA* novaTarefa = criarTarefa(descricao, prioridade, status, id);
     if (*lista == NULL){
         *lista = novaTarefa;
@@ -50,7 +51,7 @@ void inserirTarefa(TAREFA** lista, int id, int status, char* descricao, int prio
     }
 }
 
-void inserirTarefaData(DataTarefa** listaData, char* data, char* descricao, int prioridade, int status){
+void inserirTarefaData(DataTarefa** listaData, char* data, char* descricao, int prioridade, char* status){
     DataTarefa* aux = *listaData;
 
     while (aux != NULL && strcmp(aux->data, data) != 0){
@@ -68,9 +69,11 @@ void inserirTarefaData(DataTarefa** listaData, char* data, char* descricao, int 
     int id = calcularId(data, aux->cont);
 
     inserirTarefa(&(aux->tarefas), id, status, descricao, prioridade);
+
+    printf("Tarefa adicionada com sucesso na data %s!\n", data);
 }
 
-TAREFA* removerTarefa(TAREFA* lista, int idBusca) {
+TAREFA* removerTarefa(TAREFA* lista, Alteracao* pilha, int idBusca) {
     TAREFA* ant = NULL;
     TAREFA* aux = lista;
 
@@ -78,6 +81,8 @@ TAREFA* removerTarefa(TAREFA* lista, int idBusca) {
         ant = aux;
         aux = aux->prox;
     }
+
+    pilhaPush(pilha, aux);
 
     if (aux == NULL) {  
         printf("Tarefa com ID %d nao encontrada.\n", idBusca);
@@ -96,12 +101,12 @@ TAREFA* removerTarefa(TAREFA* lista, int idBusca) {
     return lista;
 }
 
-DataTarefa* removerTarefaData(DataTarefa* listaData, int idBusca) {
+DataTarefa* removerTarefaData(DataTarefa* listaData, Alteracao* pilha, int idBusca) {
     DataTarefa* auxData = listaData;
     DataTarefa* antData = NULL;
 
     while (auxData != NULL) {
-        auxData->tarefas = removerTarefa(auxData->tarefas, idBusca);
+        auxData->tarefas = removerTarefa(auxData->tarefas, pilha, idBusca);
 
         if (auxData->tarefas == NULL) {
             if (antData == NULL) {
@@ -122,6 +127,46 @@ DataTarefa* removerTarefaData(DataTarefa* listaData, int idBusca) {
     return listaData;
 }
 
+void editarTarefa(DataTarefa* listaData, Alteracao* pilha, int idbusca){
+    while (listaData != NULL) {
+        TAREFA* tarefa = listaData->tarefas;
+        while (tarefa != NULL) {
+            if (tarefa->id == idbusca){
+                pilhaPush(pilha, tarefa);
+
+                printf("Tarefa encontrada!\n");
+                printf("ID: %d\n", tarefa->id);
+                printf("Tarefa: %s\n", tarefa->descricao);
+                printf("Prioridade: %d\n", tarefa->prioridade);
+                printf("Status: %s\n", tarefa->status);
+
+                printf("------------- EDITANDO TAREFA %d -------------\n", tarefa->id);
+                printf("Digite o novo nome (ou pressione Enter para manter): ");
+                char novaDescricao[300];
+                scanf(" %[^\n]", novaDescricao);
+                fgets(novaDescricao, 300, stdin);
+                if (novaDescricao[0] != '\n') {
+                    strcpy(tarefa->descricao, novaDescricao);
+                    tarefa->descricao[strcspn(tarefa->descricao, "\n")] = 0;  // Remove newline.
+                }
+
+                printf("Digite a nova prioridade (1 - Alta, 2 - Média, 3 - Baixa, ou 0 para manter): ");
+                int novaPrioridade;
+                scanf("%d", &novaPrioridade);
+                if (novaPrioridade >= 1 && novaPrioridade <= 3) {
+                    tarefa->prioridade = novaPrioridade;
+                }
+
+                printf("Tarefa editada com sucesso!\n");
+                return;
+            }
+            tarefa = tarefa->prox;
+        }
+        listaData = listaData->prox;
+    }
+    printf("Tarefa com ID %d nao encontrada!\n", idbusca);
+}
+
 void concluirTarefa(DataTarefa** listaData, TarefasConcluidas* concluidas, int id) {
     DataTarefa* atual = *listaData;
     DataTarefa* anteriorData = NULL;
@@ -132,7 +177,7 @@ void concluirTarefa(DataTarefa** listaData, TarefasConcluidas* concluidas, int i
 
         while (tarefa != NULL) {
             if (tarefa->id == id) {
-                tarefa->status = 0;  
+                strcpy(tarefa->status, "CONCLUIDA");  
                 printf("Tarefa ID %d foi marcada como CONCLUIDA!\n", id);
 
                 if (anteriorTarefa == NULL) {
@@ -175,7 +220,7 @@ void imprimirTarefasPorData(DataTarefa* lista){
         printf("---------------------------------------------\n");
         TAREFA* auxTarefa = auxData->tarefas;
         while (auxTarefa != NULL){
-            printf(" ID: %d\n Tarefa: %s\n Prioridade: %d\n Status: %d\n", auxTarefa->id, auxTarefa->descricao, auxTarefa->prioridade, auxTarefa->status);
+            printf(" ID: %d\n Tarefa: %s\n Prioridade: %d\n Status: %s\n", auxTarefa->id, auxTarefa->descricao, auxTarefa->prioridade, auxTarefa->status);
             printf("---------------------------------------------\n");
             auxTarefa = auxTarefa->prox;
         }

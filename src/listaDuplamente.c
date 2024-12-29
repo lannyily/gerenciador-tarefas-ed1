@@ -4,13 +4,13 @@
 #include "../include/listaDuplamente.h"
 #include "../include/listaEncadeada.h"
 
-TarefasOrdenadas* transferirTarefas(int tarefaID, char* descricao, int prioridade, int status) {
+TarefasOrdenadas* transferirTarefas(int tarefaID, char* descricao, int prioridade, char* status) {
     TarefasOrdenadas* novaTarefa = (TarefasOrdenadas*)malloc(sizeof(TarefasOrdenadas));
     novaTarefa->tarefa = (TAREFA*)malloc(sizeof(TAREFA));
     novaTarefa->tarefa->id = tarefaID;
     strcpy(novaTarefa->tarefa->descricao, descricao);
     novaTarefa->tarefa->prioridade = prioridade;
-    novaTarefa->tarefa->status = status;
+    strcpy(novaTarefa->tarefa->status, status);
     novaTarefa->prox = NULL;
     novaTarefa->ant = NULL;
     return novaTarefa;
@@ -56,7 +56,7 @@ void ordenarTarefasDeDataNaListaDupla(DataTarefa* listaData, TarefasOrdenadas** 
 void imprimirTarefasOrdenadas(TarefasOrdenadas* ordenadas) {
     TarefasOrdenadas* atual = ordenadas;
     while (atual != NULL) {
-        printf("ID: %d\nTarefa: %s\nPrioridade: %d\nStatus: %d\n\n",
+        printf("ID: %d\nTarefa: %s\nPrioridade: %d\nStatus: %s\n\n",
                atual->tarefa->id, atual->tarefa->descricao, atual->tarefa->prioridade, atual->tarefa->status);
         atual = atual->prox;
     }

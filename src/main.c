@@ -6,13 +6,15 @@
 #include "../include/listaCircular.h"
 #include "../include/listaDuplamente.h"
 #include "listaDuplamente.c"
+#include "../include/pilha.h"
+#include "pilha.c"
 // #include "../include/fila.h"
-// #include "../include/pilha.h"
 
 int main() {
     DataTarefa* lista = NULL;
     TarefasConcluidas* historico = criarTC(10);
     TarefasOrdenadas* listaOrdenada = NULL;
+    Alteracao pilha = {NULL};
     int op;
 
     do {
@@ -23,6 +25,8 @@ int main() {
         printf("4 - Concluir uma tarefa\n");
         printf("5 - Historico de tarefas concluidas\n");
         printf("6 - Imprimir tarefas ordenadas\n");
+        printf("7 - Editar tarefa\n");
+        printf("8 - Desfazer a ultima operacao\n");
         printf("0 - SAIR\n");
         printf("----------------------------------------------\n");
         printf("Escolha uma opcao: ");
@@ -54,12 +58,12 @@ int main() {
                     return 1;
                 }
 
-                inserirTarefaData(&lista, data, descricao, prioridade, 1);
+                inserirTarefaData(&lista, data, descricao, prioridade, "NAO CONCLUIDA");
 
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, 1);
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, 1);
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, 1);
-                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, 1);
+                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "NAO CONCLUIDA");
                 
                 break;
             }
@@ -72,10 +76,25 @@ int main() {
                 imprimirTarefasPorData(lista);
 
                 int idBusca;
+                char voltar3[10];
                 printf("Informe o id da tarefa que deseja remover: ");
                 scanf("%d", &idBusca);
 
-                lista = removerTarefaData(lista, idBusca);
+                lista = removerTarefaData(lista, &pilha, idBusca);
+
+                while (1){
+                    printf("Deseja desfazer essa operacao? [S/N]: ");
+                    scanf("%s", voltar3);
+
+                    if (voltar3[0] == 'S' || voltar3[0] == 's') {
+                        desfazerAlteracao(&pilha, lista);
+                        break; 
+                    } else if (voltar3[0] == 'N' || voltar3[0] == 'n') {
+                        break; 
+                    } else {
+                        printf("Entrada invalida! Tente novamente!\n");
+                    }
+                }
 
                 break;
             }
@@ -94,6 +113,34 @@ int main() {
             case 6:
                 ordenarTarefasDeDataNaListaDupla(lista, &listaOrdenada);
                 imprimirTarefasOrdenadas(listaOrdenada);
+                break;
+            case 7: { 
+                int idEditar;
+                char voltar7[10];
+
+                imprimirTarefasPorData(lista);
+                printf("Informe o ID da tarefa a ser editada: ");
+                scanf("%d", &idEditar);
+
+                editarTarefa(lista, &pilha, idEditar);
+
+                while(1){
+                    printf("Deseja desfazer essa operacao? [S/N]: ");
+                    scanf("%s", voltar7);
+
+                    if (voltar7[0] == 'S' || voltar7[0] == 's'){
+                        desfazerAlteracao(&pilha, lista);
+                        break;
+                    } else if (voltar7[0] == 'N' || voltar7[0] == 'n'){
+                        break;
+                    } else {
+                        printf("Entrada invalida! Tente novamente!\n");
+                    }
+                }
+                break;
+            }
+            case 8:
+                desfazerAlteracao(&pilha, lista);
                 break;
             case 0:
                 printf("Saindo do programa...\n");

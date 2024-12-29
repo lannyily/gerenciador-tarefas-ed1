@@ -12,7 +12,7 @@ typedef struct TarefasOrdenadas{
     struct TarefasOrdenadas* ant;
 }TarefasOrdenadas;
 
-TarefasOrdenadas* transferirTarefas(int tarefaID, char* descricao, int prioridade, int status);
+TarefasOrdenadas* transferirTarefas(int tarefaID, char* descricao, int prioridade, char* status);
 void inserirTarefaOrdenada(TarefasOrdenadas** ordenadas, TAREFA* lista);
 void ordenarTarefasDeDataNaListaDupla(DataTarefa* listaData, TarefasOrdenadas** ordenadas);
 void imprimirTarefasOrdenadas(TarefasOrdenadas* ordenadas);
