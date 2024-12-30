@@ -22,16 +22,17 @@ int main() {
 
     do {
         printf("-------------------- MENU --------------------\n");
-        printf("1 - Adicionar tarefa\n");
-        printf("2 - Imprimir tarefas\n");
-        printf("3 - Remover tarefa\n");
-        printf("4 - Concluir uma tarefa\n");
-        printf("5 - Historico de tarefas concluidas\n");
-        printf("6 - Imprimir tarefas ordenadas\n");
-        printf("7 - Editar tarefa\n");
-        printf("8 - Desfazer a ultima operacao\n");
-        printf("9 - Tarefas do dia\n");
-        printf("0 - SAIR\n");
+        printf(" 1 - Adicionar tarefa\n");
+        printf(" 2 - Imprimir todas as tarefas\n");
+        printf(" 3 - Remover tarefa\n");
+        printf(" 4 - Concluir uma tarefa\n");
+        printf(" 5 - Historico de tarefas concluidas\n");
+        printf(" 6 - Imprimir tarefas ordenadas\n");
+        printf(" 7 - Editar tarefa\n");
+        printf(" 8 - Desfazer a ultima operacao\n");
+        printf(" 9 - Tarefas do dia\n");
+        printf("10 - Pesquisar tarefa\n");
+        printf(" 0 - SAIR\n");
         printf("----------------------------------------------\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &op);
@@ -90,16 +91,15 @@ int main() {
                     printf("Deseja desfazer essa operacao? [S/N]: ");
                     scanf("%s", voltar3);
 
-                    if (voltar3[0] == 'S' || voltar3[0] == 's') {
+                    if(voltar3[0] == 'S' || voltar3[0] == 's') {
                         desfazerAlteracao(lista, &pilha);
                         break; 
-                    } else if (voltar3[0] == 'N' || voltar3[0] == 'n') {
+                    } else if (voltar3[0] == 'N' || voltar3[0] == 'n'){
                         break; 
                     } else {
                         printf("Entrada invalida! Tente novamente!\n");
                     }
                 }
-
                 break;
             }
             case 4: { 
@@ -150,7 +150,10 @@ int main() {
             case 8:
                 desfazerAlteracao(lista, &pilha);
                 break;
-            case 9:
+            case 9: { 
+                char opcao[10];
+                int concluirID;
+
                 inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
                 inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
                 inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
@@ -161,13 +164,39 @@ int main() {
                 inserirTarefaData(&lista, "30-12-2024", "Planejar Viagem", 1, "PENDENTE");
                 carregartarefasDoDia(lista, &fila);
                 imprimirTarefasDoDia(&fila);
+
+                while(1) {
+                    printf("Deseja concluir alguma tarefa? [S/N]: ");
+                    scanf("%s", opcao);
+
+                    if(opcao[0] == 'S' || opcao[0] == 's'){
+                        printf("Digite o ID da tarefa: ");
+                        scanf("%d", &concluirID);
+                        concluirTarefa(&lista, historico, concluirID);
+                        break;
+                    } else if (opcao[0] == 'N' || opcao[0] == 'n') {
+                        break;
+                    } else{
+                        printf("Entrada invalida! Tente novamente!\n");
+                    }
+                }
                 break;
+            }
+            case 10: { 
+                char buscarTarefa[300];
+                printf("Digite a tarefa: ");
+                scanf(" %[^\n]", buscarTarefa);
+
+                buscarTarefaNome(lista, buscarTarefa);
+                break;
+            }
             case 0:
                 printf("Saindo do programa...\n");
                 liberarTarefaData(lista);
                 liberarTC(historico);
                 liberarTarefasOrdenadas(listaOrdenada);
                 liberarAlteracao(&pilha);
+                liberarTarefasDoDia(&fila);
                 exit(0); 
                 break;
             default:

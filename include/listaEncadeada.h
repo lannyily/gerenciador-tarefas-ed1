@@ -21,6 +21,8 @@ typedef struct DataTarefa{
     struct DataTarefa* prox;
 }DataTarefa;
 
+int comparaString(char* nomeBusca, char* nome);
+void buscarTarefaNome(DataTarefa* listaData, char* nomeBusca);
 void dataAtual(char* dataHoje);
 void carregartarefasDoDia(DataTarefa* listaData, TarefasDoDia* fila);
 int calcularId(char* data, int cont);

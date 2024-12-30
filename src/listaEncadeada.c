@@ -9,6 +9,35 @@
 #include "listaCircular.c"
 #include "../include/fila.h"
 
+int comparaString(char* nomeBusca, char* nome){
+    if(*nomeBusca != 0){
+        if (*nome == 0) return 0;
+        if (*nomeBusca == *nome) return comparaString(++nomeBusca, ++nome);
+        return 0;
+    } else {
+        return (*nome == 0);
+    }
+}
+
+void buscarTarefaNome(DataTarefa* listaData, char* nomeBusca){
+    while(listaData != NULL){
+        TAREFA* tarefa = listaData->tarefas;
+        while (tarefa != NULL){
+            if(comparaString(nomeBusca, tarefa->descricao)){
+                printf("Tarefa encontrada!\n");
+                printf("ID: %d\n", tarefa->id);
+                printf("Tarefa: %s\n", tarefa->descricao);
+                printf("Prioridade: %d\n", tarefa->prioridade);
+                printf("Status: %s\n", tarefa->status);
+                return;
+            }
+            tarefa = tarefa->prox;
+        }
+        listaData = listaData->prox;
+    }
+    printf("Tarefa '%s' nao encontrada!\n", nomeBusca);
+}
+
 void dataAtual(char* dataHoje){
     time_t tempo = time(NULL);
     struct tm tm = *localtime(&tempo);
@@ -129,7 +158,6 @@ TAREFA* removerTarefa(TAREFA* lista, Alteracao* pilha, int idBusca) {
     return lista;
 }
 
-
 DataTarefa* removerTarefaData(DataTarefa* listaData, Alteracao* pilha, int idBusca) {
     DataTarefa* auxData = listaData;
     DataTarefa* antData = NULL;
@@ -189,7 +217,7 @@ void buscarTarefa(DataTarefa* listaData, Alteracao* pilha, int idbusca){
             if (tarefa->id == idbusca){
                 pilhaPush(pilha, tarefa);  
 
-                printf("Tarefa encontrada!\n");
+                printf("Tarefa encontrada!\n\n");
                 printf("ID: %d\n", tarefa->id);
                 printf("Tarefa: %s\n", tarefa->descricao);
                 printf("Prioridade: %d\n", tarefa->prioridade);
