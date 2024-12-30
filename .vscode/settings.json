@@ -5,6 +5,7 @@
         "stdio.h": "c",
         "listacircular.h": "c",
         "listaduplamente.h": "c",
-        "ctype.h": "c"
+        "ctype.h": "c",
+        "stdlib.h": "c"
     }
 }

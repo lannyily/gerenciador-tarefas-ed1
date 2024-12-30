@@ -4,6 +4,7 @@
 typedef struct TarefasConcluidas TarefasConcluidas;
 typedef struct TarefasOrdenada TarefasOrdenada;
 typedef struct Alteracao Alteracao;
+typedef struct TarefasDoDia TarefasDoDia;
 
 typedef struct TAREFA{
     int id;
@@ -20,7 +21,8 @@ typedef struct DataTarefa{
     struct DataTarefa* prox;
 }DataTarefa;
 
-void obterDataAtual(char* buffer);
+void dataAtual(char* dataHoje);
+void carregartarefasDoDia(DataTarefa* listaData, TarefasDoDia* fila);
 int calcularId(char* data, int cont);
 TAREFA* criarTarefa(char* decricao, int prioridade, char* status, int id);
 DataTarefa* criarDataTarefa(char* data);

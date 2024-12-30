@@ -7,25 +7,33 @@
 #include "../include/listaCircular.h"
 #include "../include/pilha.h"
 #include "listaCircular.c"
+#include "../include/fila.h"
 
-void obterDataAtual(char* buffer) {
-    time_t agora = time(NULL);
-    struct tm* tm_info = localtime(&agora);
-
-    int dia = tm_info->tm_mday;
-    int mes = tm_info->tm_mon + 1; 
-
-    sprintf(buffer, "%02d-%02d", dia, mes);
+void dataAtual(char* dataHoje){
+    time_t tempo = time(NULL);
+    struct tm tm = *localtime(&tempo);
+    sprintf(dataHoje, "%02d-%02d-%04d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 }
 
-DataTarefa* encontrarTarefasDoDia(DataTarefa* listaData, char* dataAtual) {
-    while (listaData != NULL) {
-        if (strcmp(listaData->data, dataAtual) == 0) {
-            return listaData; 
+void carregartarefasDoDia(DataTarefa* listaData, TarefasDoDia* fila){
+    char dataHoje[11];
+    dataAtual(dataHoje);
+
+    printf("\nTarefas para o dia %s:\n", dataHoje);
+
+    DataTarefa* aux = listaData;
+    while(aux != NULL){
+        if (strcmp(aux->data, dataHoje) == 0){
+            TAREFA* tarefa = aux->tarefas;
+            while(tarefa != NULL){
+                inserirTarefasNaFila(fila, tarefa->descricao, tarefa->prioridade, tarefa->status, tarefa->id);
+                tarefa = tarefa->prox;
+            }
+            return;
         }
-        listaData = listaData->prox;
+        aux = aux->prox;
     }
-    return NULL; 
+    printf("Nenhuma tarefa para hoje!\n");
 }
 
 int calcularId(char* data, int cont){

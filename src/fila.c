@@ -3,31 +3,52 @@
 #include <string.h>
 #include <time.h>
 #include "../include/fila.h"
+#include "../include/listaEncadeada.h"
 
-void adicionarTarefasNaFila(TarefasDoDia* fila, DataTarefa* tarefasDoDia) {
-    if (tarefasDoDia == NULL || tarefasDoDia->tarefas == NULL) {
-        printf("Nenhuma tarefa encontrada para o dia.\n");
-        return;
-    }
-
-    TAREFA* tarefaAtual = tarefasDoDia->tarefas;
-    while (tarefaAtual != NULL) {
-        enfileirar(fila, tarefaAtual);
-        tarefaAtual = tarefaAtual->prox;
-    }
-    printf("Tarefas do dia %s adicionadas na fila.\n", tarefasDoDia->data);
+TarefasDoDia* criarFila(void){
+    TarefasDoDia* fila = (TarefasDoDia*)malloc(sizeof(TarefasDoDia));
+    fila->inicio = NULL;
+    fila->fim = NULL;
+    return fila;
 }
 
-void carregarTarefasDoDia(DataTarefa* listaData, TarefasDoDia* fila) {
-    char dataAtual[10];
-    obterDataAtual(dataAtual, sizeof(dataAtual));
+void inserirTarefasNaFila(TarefasDoDia* fila, char* decricao, int prioridade, char* status, int id){
+    TAREFA* nova = (TAREFA*)malloc(sizeof(TAREFA));
+    nova->id = id;
+    strcpy(nova->descricao, decricao);
+    nova->prioridade = prioridade;
+    strcpy(nova->status, status);
+    nova->prox = NULL;
 
-    printf("Data atual: %s\n", dataAtual);
-
-    DataTarefa* tarefasDoDia = encontrarTarefasDoDia(listaData, dataAtual);
-    if (tarefasDoDia != NULL) {
-        adicionarTarefasNaFila(fila, tarefasDoDia);
+    if (fila->inicio == NULL) { 
+        fila->inicio = nova;
     } else {
-        printf("Nenhuma tarefa encontrada para a data %s.\n", dataAtual);
+        fila->fim->prox = nova;
     }
+    fila->fim = nova;
+}
+
+void imprimirTarefasDoDia(TarefasDoDia* fila){
+    if(fila == NULL) return;
+
+    printf("--------------- TAREFAS DO DIA ---------------\n");
+    TAREFA* atual = fila->inicio;
+    while (atual != NULL) {
+        printf("ID: %d\n", atual->id);
+        printf("Tarefa: %s\n", atual->descricao);
+        printf("Prioridade: %d\n", atual->prioridade);
+        printf("Status: %s\n", atual->status);
+        printf("----------------------------------------------\n");
+        atual = atual->prox;
+    }
+}
+
+void liberarTarefasDoDia(TarefasDoDia* fila){
+    TAREFA* aux = fila->inicio;
+    while (aux != NULL){
+        TAREFA* temp = aux->prox;
+        free(aux);
+        aux = temp;
+    }
+    free(fila);
 }

@@ -10,12 +10,14 @@
 #include "../include/pilha.h"
 #include "pilha.c"
 #include "../include/fila.h"
+#include "fila.c"
 
 int main() {
     DataTarefa* lista = NULL;
     TarefasConcluidas* historico = criarTC(10);
     TarefasOrdenadas* listaOrdenada = NULL;
     Alteracao pilha = {NULL};
+    TarefasDoDia fila = {NULL, NULL};
     int op;
 
     do {
@@ -28,6 +30,7 @@ int main() {
         printf("6 - Imprimir tarefas ordenadas\n");
         printf("7 - Editar tarefa\n");
         printf("8 - Desfazer a ultima operacao\n");
+        printf("9 - Tarefas do dia\n");
         printf("0 - SAIR\n");
         printf("----------------------------------------------\n");
         printf("Escolha uma opcao: ");
@@ -59,7 +62,7 @@ int main() {
                     return 1;
                 }
 
-                inserirTarefaData(&lista, data, descricao, prioridade, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, data, descricao, prioridade, "PENDENTE");
                 
                 break;
             }
@@ -69,10 +72,10 @@ int main() {
                 imprimirTarefasPorData(lista);
                 break;
             case 3: {
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "NAO CONCLUIDA");
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "NAO CONCLUIDA");
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "NAO CONCLUIDA");
-                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "PENDENTE");
                 
                 imprimirTarefasPorData(lista);
 
@@ -116,10 +119,10 @@ int main() {
                 imprimirTarefasOrdenadas(listaOrdenada);
                 break;
             case 7: { 
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "NAO CONCLUIDA");
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "NAO CONCLUIDA");
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "NAO CONCLUIDA");
-                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "PENDENTE");
                 int idEditar;
                 char voltar7[10];
 
@@ -146,6 +149,18 @@ int main() {
             }
             case 8:
                 desfazerAlteracao(lista, &pilha);
+                break;
+            case 9:
+                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "30-12-2024", "Planejar Viagem", 1, "PENDENTE");
+                inserirTarefaData(&lista, "30-12-2024", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "30-12-2024", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "30-12-2024", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "30-12-2024", "Planejar Viagem", 1, "PENDENTE");
+                carregartarefasDoDia(lista, &fila);
+                imprimirTarefasDoDia(&fila);
                 break;
             case 0:
                 printf("Saindo do programa...\n");

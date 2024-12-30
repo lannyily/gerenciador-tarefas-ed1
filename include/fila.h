@@ -5,13 +5,11 @@ typedef struct TAREFA TAREFA;
 typedef struct DataTarefa DataTarefa;
 
 typedef struct TarefasDoDia{
-    DataTarefa* data;
-    int inicio;
-    int fim;
-    int tamanho;
-    int capacidade;
+    TAREFA* inicio;
+    TAREFA* fim;
 }TarefasDoDia;
 
-void adicionarTarefasNaFila(TarefasDoDia* fila, DataTarefa* tarefasDoDia);
+TarefasDoDia* criarFila(void);
+void inserirTarefasNaFila(TarefasDoDia* fila, char* decricao, int prioridade, char* status, int id);
 
 #endif 
