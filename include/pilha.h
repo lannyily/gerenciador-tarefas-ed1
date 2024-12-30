@@ -13,6 +13,8 @@ typedef struct Alteracao{
 
 void pilhaPush(Alteracao* pilha, TAREFA* tarefaOriginal);
 TAREFA* pilhaPop(Alteracao* pilha);
-void desfazerAlteracao(Alteracao* pilha, DataTarefa* listaData);
+DataTarefa* desfazerAlteracao(DataTarefa* listaData, Alteracao* pilha);
+TAREFA* desfazerAlteracaoEditar(Alteracao* pilha, DataTarefa* listaData);
+void liberarAlteracao(Alteracao* pilha);
 
 #endif

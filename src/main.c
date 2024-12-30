@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "../include/listaEncadeada.h"
 #include "listaEncadeada.c"
 #include "../include/listaCircular.h"
@@ -8,7 +9,7 @@
 #include "listaDuplamente.c"
 #include "../include/pilha.h"
 #include "pilha.c"
-// #include "../include/fila.h"
+#include "../include/fila.h"
 
 int main() {
     DataTarefa* lista = NULL;
@@ -59,11 +60,6 @@ int main() {
                 }
 
                 inserirTarefaData(&lista, data, descricao, prioridade, "NAO CONCLUIDA");
-
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "NAO CONCLUIDA");
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "NAO CONCLUIDA");
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "NAO CONCLUIDA");
-                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "NAO CONCLUIDA");
                 
                 break;
             }
@@ -73,6 +69,11 @@ int main() {
                 imprimirTarefasPorData(lista);
                 break;
             case 3: {
+                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "NAO CONCLUIDA");
+                
                 imprimirTarefasPorData(lista);
 
                 int idBusca;
@@ -87,7 +88,7 @@ int main() {
                     scanf("%s", voltar3);
 
                     if (voltar3[0] == 'S' || voltar3[0] == 's') {
-                        desfazerAlteracao(&pilha, lista);
+                        desfazerAlteracao(lista, &pilha);
                         break; 
                     } else if (voltar3[0] == 'N' || voltar3[0] == 'n') {
                         break; 
@@ -115,6 +116,10 @@ int main() {
                 imprimirTarefasOrdenadas(listaOrdenada);
                 break;
             case 7: { 
+                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "NAO CONCLUIDA");
+                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "NAO CONCLUIDA");
                 int idEditar;
                 char voltar7[10];
 
@@ -122,14 +127,14 @@ int main() {
                 printf("Informe o ID da tarefa a ser editada: ");
                 scanf("%d", &idEditar);
 
-                editarTarefa(lista, &pilha, idEditar);
+                buscarTarefa(lista, &pilha, idEditar);
 
                 while(1){
                     printf("Deseja desfazer essa operacao? [S/N]: ");
                     scanf("%s", voltar7);
 
                     if (voltar7[0] == 'S' || voltar7[0] == 's'){
-                        desfazerAlteracao(&pilha, lista);
+                        desfazerAlteracao(lista, &pilha);
                         break;
                     } else if (voltar7[0] == 'N' || voltar7[0] == 'n'){
                         break;
@@ -140,13 +145,14 @@ int main() {
                 break;
             }
             case 8:
-                desfazerAlteracao(&pilha, lista);
+                desfazerAlteracao(lista, &pilha);
                 break;
             case 0:
                 printf("Saindo do programa...\n");
                 liberarTarefaData(lista);
                 liberarTC(historico);
                 liberarTarefasOrdenadas(listaOrdenada);
+                liberarAlteracao(&pilha);
                 exit(0); 
                 break;
             default:

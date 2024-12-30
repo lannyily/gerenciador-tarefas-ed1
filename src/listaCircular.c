@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "../include/listaCircular.h"
 
 TarefasConcluidas* criarTC(int capacidade){

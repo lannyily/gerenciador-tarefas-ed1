@@ -9,7 +9,7 @@ typedef struct TAREFA{
     int id;
     char descricao[300];
     int prioridade; // 1 - Alta, 2 - Média e 3 - Baixa
-    char status[20]; // 1 - Não Concluida e 0 - Concluida
+    char status[20]; 
     struct TAREFA* prox;
 }TAREFA;
 
@@ -20,6 +20,7 @@ typedef struct DataTarefa{
     struct DataTarefa* prox;
 }DataTarefa;
 
+void obterDataAtual(char* buffer);
 int calcularId(char* data, int cont);
 TAREFA* criarTarefa(char* decricao, int prioridade, char* status, int id);
 DataTarefa* criarDataTarefa(char* data);
@@ -27,7 +28,8 @@ void inserirTarefa(TAREFA** lista, int id, char* status, char* descricao, int pr
 void inserirTarefaData(DataTarefa** listaData, char* data, char* descricao, int prioridade, char* status);
 TAREFA* removerTarefa(TAREFA* lista, Alteracao* pilha, int idBusca);
 DataTarefa* removerTarefaData(DataTarefa* listaData, Alteracao* pilha, int idBusca);
-void editarTarefa(DataTarefa* listaData, Alteracao* pilha, int idbusca);
+void editarTarefa(TAREFA* tarefa);
+void buscarTarefa(DataTarefa* listaData, Alteracao* pilha, int idbusca);
 void concluirTarefa(DataTarefa** listaData, TarefasConcluidas* concluidas, int id);
 void imprimirTarefasPorData(DataTarefa* lista);
 void liberarTarefas(TAREFA* lista);

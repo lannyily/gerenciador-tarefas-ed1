@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "../include/pilha.h"
+#include "../include/listaEncadeada.h"
 
 void pilhaPush(Alteracao* pilha, TAREFA* tarefaOriginal){
     TAREFA* novaTarefa = (TAREFA*)malloc(sizeof(TAREFA));
@@ -21,21 +23,63 @@ TAREFA* pilhaPop(Alteracao* pilha){
     return topo;
 }
 
-void desfazerAlteracao(Alteracao* pilha, DataTarefa* listaData){
-    TAREFA* desfazer = pilhaPop(pilha);
+DataTarefa* desfazerAlteracao(DataTarefa* listaData, Alteracao* pilha) { 
+    TAREFA* tarefaRestaurada = pilhaPop(pilha);
+    if (tarefaRestaurada == NULL) {
+        printf("Nenhuma alteracao para desfazer!\n");
+        return listaData;
+    }
 
-    if (desfazer == NULL) return;
+    int idDataTarefa = tarefaRestaurada->id / 1000;
 
-    DataTarefa* atual = listaData;
-    while (atual != NULL){
-        if (strcmp(atual->data, desfazer->status) == 0){
-            desfazer->prox = atual->tarefas;
-            atual->tarefas = desfazer;
-            printf("Alteracao desfeita para a tarefa ID %d.\n", desfazer->id);
-            return;
+    DataTarefa* auxData = listaData;
+    while (auxData != NULL) {
+        int idDataAtual = calcularId(auxData->data, 0) / 1000;
+        if (idDataAtual == idDataTarefa) {
+            break;
         }
+        auxData = auxData->prox;
+    }
+
+    if (auxData == NULL) {
+        printf("Data do ID %d nao encontrada!\n", tarefaRestaurada->id);
+        free(tarefaRestaurada); 
+        return listaData;
+    }
+
+    TAREFA* anterior = NULL;
+    TAREFA* atual = auxData->tarefas;
+
+    while (atual != NULL) {
+        if (atual->id == tarefaRestaurada->id) {
+            if (anterior == NULL) {
+                auxData->tarefas = tarefaRestaurada;
+            } else {
+                anterior->prox = tarefaRestaurada;
+            }
+            tarefaRestaurada->prox = atual->prox;
+            free(atual); 
+            printf("Tarefa ID %d foi restaurada na data %s!\n", tarefaRestaurada->id, auxData->data);
+            return listaData;
+        }
+        anterior = atual;
         atual = atual->prox;
     }
-    printf("Data nao encontrada! Nao foi possivel desfazer a alteracao!\n");
-    free(desfazer);
+
+    tarefaRestaurada->prox = auxData->tarefas;
+    auxData->tarefas = tarefaRestaurada;
+    auxData->cont++;
+    printf("Tarefa com ID %d restaurada na data %s!\n", tarefaRestaurada->id, auxData->data);
+
+    return listaData;
+}
+
+void liberarAlteracao(Alteracao* pilha) {
+    TAREFA* q = pilha->primeiro;
+    while (q != NULL) {
+        TAREFA* temp = q->prox;
+        free(q);
+        q = temp;
+    }
+    free(pilha);
 }
