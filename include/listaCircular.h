@@ -4,7 +4,7 @@
 
 typedef struct TAREFA TAREFA;
 typedef struct DataTarefa DataTarefa;
-typedef struct TarefasOrdenada TarefasOrdenada;
+typedef struct TarefasOrdenadas TarefasOrdenadas;
 
 typedef struct TarefasConcluidas {
     TAREFA* tarefaMaisAntiga;

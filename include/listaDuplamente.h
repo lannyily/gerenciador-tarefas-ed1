@@ -5,6 +5,7 @@
 typedef struct TAREFA TAREFA;
 typedef struct DataTarefa DataTarefa;
 typedef struct TarefasConcluida TarefasConcluida;
+typedef struct TarefasOrdenadas TarefasOrdenadas;
 
 typedef struct TarefasOrdenadas{
     TAREFA* tarefa;
@@ -12,9 +13,14 @@ typedef struct TarefasOrdenadas{
     struct TarefasOrdenadas* ant;
 }TarefasOrdenadas;
 
+//TarefasOrdenadas* mesclar(TarefasOrdenadas* lista1, TarefasOrdenadas* lista2);
+///TarefasOrdenadas* dividir(TarefasOrdenadas* ordenadas);
+//TarefasOrdenadas* mergeSort(TarefasOrdenadas* ordenadas);
+//void selectionSort(TarefasOrdenadas* ordenadas);
+void transferirTodasTarefas(TAREFA* lista, TarefasOrdenadas** todasTarefasOrdenadas);
+void bubblesort(TarefasOrdenadas* ordenadas);
 TarefasOrdenadas* transferirTarefas(int tarefaID, char* descricao, int prioridade, char* status);
-void inserirTarefaOrdenada(TarefasOrdenadas** ordenadas, TAREFA* lista);
-void ordenarTarefasDeDataNaListaDupla(DataTarefa* listaData, TarefasOrdenadas** ordenadas);
+void inserirTarefasOrdenadas(DataTarefa* listaData, TarefasOrdenadas** ordenadas);
 void imprimirTarefasOrdenadas(TarefasOrdenadas* ordenadas);
 void liberarTarefasOrdenadas(TarefasOrdenadas* ordenadas);
 

@@ -8,6 +8,33 @@
 #include "../include/pilha.h"
 #include "listaCircular.c"
 #include "../include/fila.h"
+#include "../include/listaDuplamente.h"
+
+void selectionSort(DataTarefa* listaData) {
+    DataTarefa *noAtual, *noComparador, *noMinimo;
+    char tempData[11]; 
+    TAREFA* tempTarefas; 
+
+    for (noAtual = listaData; noAtual != NULL; noAtual = noAtual->prox) {
+        noMinimo = noAtual;
+
+        for (noComparador = noAtual->prox; noComparador != NULL; noComparador = noComparador->prox) {
+            if (strcmp(noComparador->data, noMinimo->data) < 0) {
+                noMinimo = noComparador;
+            }
+        }
+
+        if (noMinimo != noAtual) {
+            strcpy(tempData, noAtual->data);
+            strcpy(noAtual->data, noMinimo->data);
+            strcpy(noMinimo->data, tempData);
+
+            tempTarefas = noAtual->tarefas;
+            noAtual->tarefas = noMinimo->tarefas;
+            noMinimo->tarefas = tempTarefas;
+        }
+    }
+}
 
 int comparaString(char* nomeBusca, char* nome){
     if(*nomeBusca != 0){
@@ -44,25 +71,55 @@ void dataAtual(char* dataHoje){
     sprintf(dataHoje, "%02d-%02d-%04d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 }
 
-void carregartarefasDoDia(DataTarefa* listaData, TarefasDoDia* fila){
+void carregartarefasDoDia(DataTarefa* listaData, TarefasDoDia* fila) {
     char dataHoje[11];
     dataAtual(dataHoje);
 
     printf("\nTarefas para o dia %s:\n", dataHoje);
 
     DataTarefa* aux = listaData;
-    while(aux != NULL){
-        if (strcmp(aux->data, dataHoje) == 0){
+    TarefasOrdenadas* listaOrdenada = NULL;
+
+    while (aux != NULL) {
+        if (strcmp(aux->data, dataHoje) == 0) {
             TAREFA* tarefa = aux->tarefas;
-            while(tarefa != NULL){
-                inserirTarefasNaFila(fila, tarefa->descricao, tarefa->prioridade, tarefa->status, tarefa->id);
+
+            while (tarefa != NULL) {
+                TarefasOrdenadas* novaTarefa = transferirTarefas(tarefa->id, tarefa->descricao, tarefa->prioridade, tarefa->status);
+
+                if (listaOrdenada == NULL) {
+                    listaOrdenada = novaTarefa;
+                } else {
+                    TarefasOrdenadas* temp = listaOrdenada;
+                    while (temp->prox != NULL) {
+                        temp = temp->prox;
+                    }
+                    temp->prox = novaTarefa;
+                    novaTarefa->ant = temp;
+                }
+
                 tarefa = tarefa->prox;
             }
-            return;
+
+            bubblesort(listaOrdenada);
+
+            TarefasOrdenadas* ordenadaAtual = listaOrdenada;
+            while (ordenadaAtual != NULL) {
+                inserirTarefasNaFila(fila, ordenadaAtual->tarefa->descricao, ordenadaAtual->tarefa->prioridade, ordenadaAtual->tarefa->status, ordenadaAtual->tarefa->id);
+                ordenadaAtual = ordenadaAtual->prox;
+            }
+
+            TarefasOrdenadas* temp = listaOrdenada;
+            while (temp != NULL) {
+                TarefasOrdenadas* prox = temp->prox;
+                free(temp->tarefa);
+                free(temp);
+                temp = prox;
+            }
+            return; 
         }
         aux = aux->prox;
     }
-    printf("Nenhuma tarefa para hoje!\n");
 }
 
 int calcularId(char* data, int cont){
@@ -281,6 +338,7 @@ void imprimirTarefasPorData(DataTarefa* lista){
     }
 
     DataTarefa* auxData = lista;
+    selectionSort(auxData);
     while (auxData != NULL){
         printf("---------------------------------------------\n");
         printf("Data: %s\n", auxData->data);

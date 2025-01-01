@@ -9,7 +9,10 @@ typedef struct TarefasDoDia{
     TAREFA* fim;
 }TarefasDoDia;
 
+int contarTarefasNaFila(TarefasDoDia* fila);
 TarefasDoDia* criarFila(void);
 void inserirTarefasNaFila(TarefasDoDia* fila, char* decricao, int prioridade, char* status, int id);
+void imprimirTarefasDoDia(TarefasDoDia* fila);
+void liberarTarefasDoDia(TarefasDoDia* fila);
 
 #endif 

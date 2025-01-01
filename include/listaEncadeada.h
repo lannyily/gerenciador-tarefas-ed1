@@ -2,7 +2,7 @@
 #define LISTA_ENCADEADA_H
 
 typedef struct TarefasConcluidas TarefasConcluidas;
-typedef struct TarefasOrdenada TarefasOrdenada;
+typedef struct TarefasOrdenadas TarefasOrdenadas;
 typedef struct Alteracao Alteracao;
 typedef struct TarefasDoDia TarefasDoDia;
 
@@ -21,6 +21,7 @@ typedef struct DataTarefa{
     struct DataTarefa* prox;
 }DataTarefa;
 
+void selectionSort(DataTarefa* listaData);
 int comparaString(char* nomeBusca, char* nome);
 void buscarTarefaNome(DataTarefa* listaData, char* nomeBusca);
 void dataAtual(char* dataHoje);

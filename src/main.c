@@ -15,7 +15,7 @@
 int main() {
     DataTarefa* lista = NULL;
     TarefasConcluidas* historico = criarTC(10);
-    TarefasOrdenadas* listaOrdenada = NULL;
+    TarefasOrdenadas* todasTarefasOrdenadas = NULL;
     Alteracao pilha = {NULL};
     TarefasDoDia fila = {NULL, NULL};
     int op;
@@ -27,7 +27,7 @@ int main() {
         printf(" 3 - Remover tarefa\n");
         printf(" 4 - Concluir uma tarefa\n");
         printf(" 5 - Historico de tarefas concluidas\n");
-        printf(" 6 - Imprimir tarefas ordenadas\n");
+        printf(" 6 - Opcoes de ordenação de todas as tarefas\n");
         printf(" 7 - Editar tarefa\n");
         printf(" 8 - Desfazer a ultima operacao\n");
         printf(" 9 - Tarefas do dia\n");
@@ -64,10 +64,29 @@ int main() {
                 }
 
                 inserirTarefaData(&lista, data, descricao, prioridade, "PENDENTE");
+
+                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
                 
                 break;
             }
             case 2:
+                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
+
                 printf("------------------ TAREFAS ------------------\n");
                 
                 imprimirTarefasPorData(lista);
@@ -114,10 +133,40 @@ int main() {
             case 5:
                 imprimirTC(historico);
                 break;
-            case 6:
-                ordenarTarefasDeDataNaListaDupla(lista, &listaOrdenada);
-                imprimirTarefasOrdenadas(listaOrdenada);
+            case 6: { 
+                int opcao6;
+
+                transferirTodasTarefas(lista, &todasTarefasOrdenadas);
+
+                do{
+                    printf("------------- TIPOS DE ORDENACAO -------------\n");
+                    printf("1 - Ordenar por ID\n");
+                    printf("2 - Ordenar por prioridade crescente\n");
+                    printf("3 - Ordenar por prioridade decrescente\n");
+                    printf("0 - Voltar\n");
+                    printf("----------------------------------------------\n");
+                    printf("Escolha uma opcao: ");
+                    scanf("%d", &opcao6);
+                    printf("\n");
+
+                    switch (opcao6){
+                        case 1:
+                            insertionSort(&todasTarefasOrdenadas);
+                            imprimirTarefasOrdenadas(todasTarefasOrdenadas);
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 0:
+                            break;
+                        default:
+                            printf("Opcao invalida, tente novamente!\n");
+                    }
+                } while (opcao6 != 0);
+                
                 break;
+            }
             case 7: { 
                 inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
                 inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
@@ -157,29 +206,36 @@ int main() {
                 inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
                 inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
                 inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "30-12-2024", "Planejar Viagem", 1, "PENDENTE");
-                inserirTarefaData(&lista, "30-12-2024", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "30-12-2024", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "30-12-2024", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "30-12-2024", "Planejar Viagem", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
+                
                 carregartarefasDoDia(lista, &fila);
-                imprimirTarefasDoDia(&fila);
 
-                while(1) {
-                    printf("Deseja concluir alguma tarefa? [S/N]: ");
-                    scanf("%s", opcao);
+                if (contarTarefasNaFila(&fila) > 0){ 
+                    imprimirTarefasDoDia(&fila);
 
-                    if(opcao[0] == 'S' || opcao[0] == 's'){
-                        printf("Digite o ID da tarefa: ");
-                        scanf("%d", &concluirID);
-                        concluirTarefa(&lista, historico, concluirID);
-                        break;
-                    } else if (opcao[0] == 'N' || opcao[0] == 'n') {
-                        break;
-                    } else{
-                        printf("Entrada invalida! Tente novamente!\n");
+                    while (1) {
+                        printf("Deseja concluir alguma tarefa? [S/N]: ");
+                        scanf("%s", opcao);
+
+                        if (opcao[0] == 'S' || opcao[0] == 's') {
+                            printf("Digite o ID da tarefa: ");
+                            scanf("%d", &concluirID);
+                            concluirTarefa(&lista, historico, concluirID);
+                            break;
+                        } else if (opcao[0] == 'N' || opcao[0] == 'n') {
+                            break;
+                        } else {
+                            printf("Entrada inválida! Tente novamente!\n");
+                        }
                     }
+                } else {
+                    printf("Nenhuma tarefa para hoje!\n");
                 }
+
                 break;
             }
             case 10: { 
@@ -194,7 +250,7 @@ int main() {
                 printf("Saindo do programa...\n");
                 liberarTarefaData(lista);
                 liberarTC(historico);
-                liberarTarefasOrdenadas(listaOrdenada);
+                liberarTarefasOrdenadas(todasTarefasOrdenadas);
                 liberarAlteracao(&pilha);
                 liberarTarefasDoDia(&fila);
                 exit(0); 

@@ -5,7 +5,7 @@
 typedef struct TAREFA TAREFA;
 typedef struct DataTarefa DataTarefa;
 typedef struct TarefasConcluida TarefasConcluida;
-typedef struct TarefasOrdenada TarefasOrdenada;
+typedef struct TarefasOrdenadas TarefasOrdenadas;
 
 typedef struct Alteracao{
     TAREFA* primeiro;

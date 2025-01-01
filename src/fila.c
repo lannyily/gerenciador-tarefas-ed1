@@ -5,6 +5,16 @@
 #include "../include/fila.h"
 #include "../include/listaEncadeada.h"
 
+int contarTarefasNaFila(TarefasDoDia* fila) {
+    TAREFA* atual = fila->inicio;
+    int count = 0;
+    while (atual != NULL) {
+        count++;
+        atual = atual->prox;
+    }
+    return count;
+}
+
 TarefasDoDia* criarFila(void){
     TarefasDoDia* fila = (TarefasDoDia*)malloc(sizeof(TarefasDoDia));
     fila->inicio = NULL;
