@@ -5,41 +5,166 @@
 #include "../include/listaDuplamente.h"
 #include "../include/listaEncadeada.h"
 
+TarefasOrdenadas* meio(TarefasOrdenadas* inicio, TarefasOrdenadas* fim){
+    if (inicio == NULL) return NULL;
 
-/* 
-TarefasOrdenadas* mesclar(TarefasOrdenadas* lista1, TarefasOrdenadas* lista2){
+    if (inicio == fim) return inicio;
+
+    TarefasOrdenadas* lento = inicio;
+    TarefasOrdenadas* rapido = inicio->prox;
+
+    while(rapido != fim){
+        rapido = rapido->prox;
+        lento = lento->prox;
+        if (rapido != fim){
+            rapido = rapido->prox;
+        }
+    }
+    return lento;
+}
+
+int buscaBinaria(TarefasOrdenadas* ordenadas, int idBusca){
+    TarefasOrdenadas* inicio = ordenadas;
+    TarefasOrdenadas* fim = NULL;
+
+    while(1){
+        TarefasOrdenadas* meioLista = meio(inicio, fim);
+
+        if (meioLista == NULL) return 0;
+
+        if (meioLista->tarefa->id == idBusca) {
+            printf("\n----------------- TAREFA %d -----------------\n", idBusca);
+            printf("ID: %d\nTarefa: %s\nPrioridade: %d\nStatus: %s\n\n",
+                meioLista->tarefa->id, meioLista->tarefa->descricao, meioLista->tarefa->prioridade, meioLista->tarefa->status);
+            return 1;
+        } else if (inicio == fim){
+            break;
+        } else if (meioLista->tarefa->id < idBusca){
+            inicio = meioLista->prox;
+        } else if (meioLista->tarefa->id > idBusca){
+            fim = meioLista;
+        }
+    }
+    return 0;
+}
+
+TarefasOrdenadas* concatenar(TarefasOrdenadas* menor, TarefasOrdenadas* pivo, TarefasOrdenadas* maior) {
+    TarefasOrdenadas* resultado = menor;
+
+    // Conecta a lista "menor" ao pivo
+    if (resultado != NULL) {
+        TarefasOrdenadas* atual = resultado;
+        while (atual->prox != NULL) {
+            atual = atual->prox;
+        }
+        atual->prox = pivo;
+        pivo->ant = atual;
+    } else {
+        resultado = pivo;
+    }
+
+    // Conecta o pivo à lista "maior"
+    pivo->prox = maior;
+    if (maior != NULL) {
+        maior->ant = pivo;
+    }
+
+    return resultado;
+}
+
+TarefasOrdenadas* particionar(TarefasOrdenadas* ordenadas, TarefasOrdenadas** menor, TarefasOrdenadas** maior) {
+    TarefasOrdenadas* pivo = ordenadas;
+    TarefasOrdenadas* atual = ordenadas->prox;
+
+    *menor = NULL;
+    *maior = NULL;
+
+    while (atual != NULL) {
+        TarefasOrdenadas* proxima = atual->prox;
+        atual->ant = NULL; // Limpa o ponteiro "ant"
+        if (atual->tarefa->prioridade >= pivo->tarefa->prioridade) {
+            // Adiciona ao início da lista "menor"
+            atual->prox = *menor;
+            if (*menor != NULL) {
+                (*menor)->ant = atual;
+            }
+            *menor = atual;
+        } else {
+            // Adiciona ao início da lista "maior"
+            atual->prox = *maior;
+            if (*maior != NULL) {
+                (*maior)->ant = atual;
+            }
+            *maior = atual;
+        }
+        atual = proxima;
+    }
+
+    pivo->prox = NULL;
+    pivo->ant = NULL;
+
+    return pivo;
+}
+
+TarefasOrdenadas* quickSort(TarefasOrdenadas* ordenadas) {
+    if (ordenadas == NULL || ordenadas->prox == NULL) {
+        return ordenadas;
+    }
+
+    TarefasOrdenadas *menor, *maior;
+    TarefasOrdenadas* pivo = particionar(ordenadas, &menor, &maior);
+
+    menor = quickSort(menor);
+    maior = quickSort(maior);
+
+    return concatenar(menor, pivo, maior);
+}
+
+TarefasOrdenadas* mesclar(TarefasOrdenadas* lista1, TarefasOrdenadas* lista2) {
     TarefasOrdenadas* resultado = NULL;
 
-    if(lista1 == NULL) return lista2;
-    if(lista2 == NULL) return lista1;
+    if (lista1 == NULL) return lista2;
+    if (lista2 == NULL) return lista1;
 
-    if(lista1->tarefa->id <= lista2->tarefa->id){
+    if (lista1->tarefa->prioridade <= lista2->tarefa->prioridade) {
         resultado = lista1;
         resultado->prox = mesclar(lista1->prox, lista2);
+        if (resultado->prox != NULL) {
+            resultado->prox->ant = resultado;
+        }
     } else {
         resultado = lista2;
         resultado->prox = mesclar(lista1, lista2->prox);
+        if (resultado->prox != NULL) {
+            resultado->prox->ant = resultado;
+        }
     }
     return resultado;
 }
 
-TarefasOrdenadas* dividir(TarefasOrdenadas* ordenadas){
+TarefasOrdenadas* dividir(TarefasOrdenadas* ordenadas) {
     TarefasOrdenadas* meio = ordenadas;
     TarefasOrdenadas* fim = ordenadas;
 
-    while(fim != NULL && fim->prox != NULL){
-        fim = fim->prox->prox;
-        meio = meio->prox;
+    while (fim != NULL && fim->prox != NULL) {
+        fim = fim->prox->prox; 
+        if (fim != NULL) {
+            meio = meio->prox; 
+        }
     }
 
-    TarefasOrdenadas segundaMetade = meio->prox;
-    meio->prox = NULL;
+    TarefasOrdenadas* segundaMetade = meio->prox;
+    if (segundaMetade != NULL) {
+        segundaMetade->ant = NULL; 
+    }
+    meio->prox = NULL; 
+
     return segundaMetade;
 }
 
-TarefasOrdenadas* mergeSort(TarefasOrdenadas* ordenadas){
-    if (ordenadas == NULL || ordenadas->prox == NULL) return ordenadas;
-
+TarefasOrdenadas* mergeSort(TarefasOrdenadas* ordenadas) {
+    if (ordenadas == NULL || ordenadas->prox == NULL)  return ordenadas; 
+    
     TarefasOrdenadas* segundaMetade = dividir(ordenadas);
 
     ordenadas = mergeSort(ordenadas);
@@ -47,7 +172,7 @@ TarefasOrdenadas* mergeSort(TarefasOrdenadas* ordenadas){
 
     return mesclar(ordenadas, segundaMetade);
 }
-*/
+
 
 void insertionSort(TarefasOrdenadas** todasTarefasOrdenadas){
     if (*todasTarefasOrdenadas == NULL) return;
@@ -83,23 +208,29 @@ void insertionSort(TarefasOrdenadas** todasTarefasOrdenadas){
     *todasTarefasOrdenadas = ordenar;
 }
 
-void transferirTodasTarefas(TAREFA* lista, TarefasOrdenadas** todasTarefasOrdenadas) {
-    TAREFA* tarefaAtual = lista;
+void transferirTodasTarefas(DataTarefa* lista, TarefasOrdenadas** todasTarefasOrdenadas) {
+    DataTarefa* dataAtual = lista;
 
-    while (tarefaAtual != NULL) {
-        TarefasOrdenadas* novaTarefa = transferirTarefas(tarefaAtual->id, tarefaAtual->descricao, tarefaAtual->prioridade, tarefaAtual->status);
+    while (dataAtual != NULL) {
+        TAREFA* tarefaAtual = dataAtual->tarefas;
 
-        if (*todasTarefasOrdenadas == NULL) {
-            *todasTarefasOrdenadas = novaTarefa;
-        } else {
-            TarefasOrdenadas* temp = *todasTarefasOrdenadas;
-            while(temp->prox != NULL) {
-                temp = temp->prox;
+        while (tarefaAtual != NULL) {
+            TarefasOrdenadas* novaTarefa = transferirTarefas(tarefaAtual->id, tarefaAtual->descricao, tarefaAtual->prioridade, tarefaAtual->status);
+
+            if (*todasTarefasOrdenadas == NULL) {
+                *todasTarefasOrdenadas = novaTarefa;
+            } else {
+                TarefasOrdenadas* temp = *todasTarefasOrdenadas;
+
+                while (temp->prox != NULL) {
+                    temp = temp->prox;
+                }
+                temp->prox = novaTarefa;
+                novaTarefa->ant = temp;
             }
-            temp->prox = novaTarefa;
-            novaTarefa->ant = temp;
+            tarefaAtual = tarefaAtual->prox;
         }
-        tarefaAtual = tarefaAtual->prox;
+        dataAtual = dataAtual->prox;
     }
 }
 

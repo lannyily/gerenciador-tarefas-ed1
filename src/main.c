@@ -27,11 +27,12 @@ int main() {
         printf(" 3 - Remover tarefa\n");
         printf(" 4 - Concluir uma tarefa\n");
         printf(" 5 - Historico de tarefas concluidas\n");
-        printf(" 6 - Opcoes de ordenação de todas as tarefas\n");
+        printf(" 6 - Opcoes de ordencao de todas as tarefas\n");
         printf(" 7 - Editar tarefa\n");
         printf(" 8 - Desfazer a ultima operacao\n");
         printf(" 9 - Tarefas do dia\n");
-        printf("10 - Pesquisar tarefa\n");
+        printf("10 - Pesquisar tarefa (String)\n");
+        printf("11 - Pesquisar tarefa (Busca binaria)\n");
         printf(" 0 - SAIR\n");
         printf("----------------------------------------------\n");
         printf("Escolha uma opcao: ");
@@ -65,15 +66,6 @@ int main() {
 
                 inserirTarefaData(&lista, data, descricao, prioridade, "PENDENTE");
 
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
-                
                 break;
             }
             case 2:
@@ -136,6 +128,15 @@ int main() {
             case 6: { 
                 int opcao6;
 
+                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
+
                 transferirTodasTarefas(lista, &todasTarefasOrdenadas);
 
                 do{
@@ -155,8 +156,12 @@ int main() {
                             imprimirTarefasOrdenadas(todasTarefasOrdenadas);
                             break;
                         case 2:
+                            mergeSort(todasTarefasOrdenadas);
+                            imprimirTarefasOrdenadas(todasTarefasOrdenadas);
                             break;
                         case 3:
+                            quickSort(todasTarefasOrdenadas);
+                            imprimirTarefasOrdenadas(todasTarefasOrdenadas);
                             break;
                         case 0:
                             break;
@@ -244,6 +249,33 @@ int main() {
                 scanf(" %[^\n]", buscarTarefa);
 
                 buscarTarefaNome(lista, buscarTarefa);
+                break;
+            }
+            case 11: {
+                int chave;
+
+                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
+
+                transferirTodasTarefas(lista, &todasTarefasOrdenadas);
+                insertionSort(&todasTarefasOrdenadas);
+                imprimirTarefasOrdenadas(todasTarefasOrdenadas);
+                
+                printf("Digite o ID que deseja buscar: ");
+                scanf("%d", &chave);
+
+                if (buscaBinaria(todasTarefasOrdenadas, chave)){
+                    printf("Tarefa encontrada!\n");
+                } else {
+                    printf("Tarefa nao encontrada!\n");
+                }
+
                 break;
             }
             case 0:

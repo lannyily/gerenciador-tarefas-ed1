@@ -105,7 +105,8 @@ void carregartarefasDoDia(DataTarefa* listaData, TarefasDoDia* fila) {
 
             TarefasOrdenadas* ordenadaAtual = listaOrdenada;
             while (ordenadaAtual != NULL) {
-                inserirTarefasNaFila(fila, ordenadaAtual->tarefa->descricao, ordenadaAtual->tarefa->prioridade, ordenadaAtual->tarefa->status, ordenadaAtual->tarefa->id);
+                inserirTarefasNaFila(fila, ordenadaAtual->tarefa->descricao, 
+                    ordenadaAtual->tarefa->prioridade, ordenadaAtual->tarefa->status, ordenadaAtual->tarefa->id);
                 ordenadaAtual = ordenadaAtual->prox;
             }
 
@@ -345,7 +346,8 @@ void imprimirTarefasPorData(DataTarefa* lista){
         printf("---------------------------------------------\n");
         TAREFA* auxTarefa = auxData->tarefas;
         while (auxTarefa != NULL){
-            printf(" ID: %d\n Tarefa: %s\n Prioridade: %d\n Status: %s\n", auxTarefa->id, auxTarefa->descricao, auxTarefa->prioridade, auxTarefa->status);
+            printf(" ID: %d\n Tarefa: %s\n Prioridade: %d\n Status: %s\n", 
+                auxTarefa->id, auxTarefa->descricao, auxTarefa->prioridade, auxTarefa->status);
             printf("---------------------------------------------\n");
             auxTarefa = auxTarefa->prox;
         }

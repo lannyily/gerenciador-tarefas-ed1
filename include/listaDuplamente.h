@@ -17,7 +17,7 @@ typedef struct TarefasOrdenadas{
 ///TarefasOrdenadas* dividir(TarefasOrdenadas* ordenadas);
 //TarefasOrdenadas* mergeSort(TarefasOrdenadas* ordenadas);
 //void selectionSort(TarefasOrdenadas* ordenadas);
-void transferirTodasTarefas(TAREFA* lista, TarefasOrdenadas** todasTarefasOrdenadas);
+void transferirTodasTarefas(DataTarefa* lista, TarefasOrdenadas** todasTarefasOrdenadas);
 void bubblesort(TarefasOrdenadas* ordenadas);
 TarefasOrdenadas* transferirTarefas(int tarefaID, char* descricao, int prioridade, char* status);
 void inserirTarefasOrdenadas(DataTarefa* listaData, TarefasOrdenadas** ordenadas);
