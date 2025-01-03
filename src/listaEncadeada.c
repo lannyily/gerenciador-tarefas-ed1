@@ -10,28 +10,186 @@
 #include "../include/fila.h"
 #include "../include/listaDuplamente.h"
 
+TAREFA* removerTarefaDeData(DataTarefa** listaData, int idTarefa) {
+    DataTarefa* atual = *listaData;
+    DataTarefa* anterior = NULL;
+
+    while (atual != NULL) {
+        TAREFA* tarefaAtual = atual->tarefas;
+        TAREFA* tarefaAnterior = NULL;
+
+        while (tarefaAtual != NULL) {
+            if (tarefaAtual->id == idTarefa) {
+                // Remove a tarefa encontrada
+                if (tarefaAnterior == NULL) {
+                    atual->tarefas = tarefaAtual->prox;
+                } else {
+                    tarefaAnterior->prox = tarefaAtual->prox;
+                }
+                atual->cont--;
+
+                // Verifica se a data ficou vazia e a remove
+                if (atual->cont == 0) {
+                    if (anterior == NULL) {
+                        *listaData = atual->prox;
+                    } else {
+                        anterior->prox = atual->prox;
+                    }
+                    free(atual);
+                }
+                return tarefaAtual; // Retorna a tarefa removida
+            }
+            tarefaAnterior = tarefaAtual;
+            tarefaAtual = tarefaAtual->prox;
+        }
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    return NULL; // Retorna NULL se a tarefa não foi encontrada
+}
+
+void adicionarTarefaEmData(DataTarefa** listaData, TAREFA* tarefa, const char* novaData) {
+    DataTarefa* atual = *listaData;
+
+    // Procura pela data
+    while (atual != NULL) {
+        if (strcmp(atual->data, novaData) == 0) {
+            break;
+        }
+        atual = atual->prox;
+    }
+
+    // Cria a data se ela não existir
+    if (atual == NULL) {
+        atual = (DataTarefa*)malloc(sizeof(DataTarefa));
+        strcpy(atual->data, novaData);
+        atual->cont = 0;
+        atual->tarefas = NULL;
+        atual->prox = *listaData;
+        *listaData = atual;
+    }
+
+    // Adiciona a tarefa à lista de tarefas da data
+    tarefa->prox = atual->tarefas;
+    atual->tarefas = tarefa;
+    atual->cont++;
+}
+
+void transferirTarefaParaOutraData(DataTarefa** listaData, int idTarefa, char* novaData) {
+    // Remove a tarefa da data original
+    TAREFA* tarefaRemovida = removerTarefaDeData(listaData, idTarefa);
+
+    if (tarefaRemovida == NULL) {
+        printf("Tarefa com ID %d não encontrada.\n", idTarefa);
+        return;
+    }
+
+    // Adiciona a tarefa à nova data
+    adicionarTarefaEmData(listaData, tarefaRemovida, novaData);
+
+    printf("Tarefa com ID %d transferida para a data %s.\n", idTarefa, novaData);
+}
+
+void imprimirTarefasVencidas(DataTarefa* listaPendentesVencidas) {
+    if (listaPendentesVencidas == NULL){
+        printf("Nao tem tarefas vencidas!\n\n");
+        return;
+    } 
+
+    DataTarefa* atual = listaPendentesVencidas;
+    printf("-------------- TAREFAS VENCIDAS --------------\n");
+
+    while (atual != NULL) {
+        printf("----------------------------------------------\n");
+        printf("Data: %s\n", atual->data);
+        printf("----------------------------------------------\n");
+        TAREFA* tarefaAtual = atual->tarefas;
+
+        while (tarefaAtual != NULL) {
+            printf("ID: %d\nTarefa: %s\nPrioridade: %d\nStatus: %s\n\n",
+                tarefaAtual->id, tarefaAtual->descricao, tarefaAtual->prioridade, tarefaAtual->status);
+            tarefaAtual = tarefaAtual->prox;
+        }
+        printf("----------------------------------------------\n\n");
+        atual = atual->prox;
+    }
+}
+
+int compararDatas(const char* data1, const char* data2) {
+    int dia1, mes1, ano1;
+    int dia2, mes2, ano2;
+
+    sscanf(data1, "%d-%d-%d", &dia1, &mes1, &ano1); // Extrai dia, mês e ano de data1
+    sscanf(data2, "%d-%d-%d", &dia2, &mes2, &ano2); // Extrai dia, mês e ano de data2
+
+    if (ano1 != ano2) {
+        return ano1 - ano2; // Compara os anos
+    } else if (mes1 != mes2) {
+        return mes1 - mes2; // Compara os meses
+    } else {
+        return dia1 - dia2; // Compara os dias
+    }
+}
+
 void selectionSort(DataTarefa* listaData) {
     DataTarefa *noAtual, *noComparador, *noMinimo;
-    char tempData[11]; 
-    TAREFA* tempTarefas; 
+    char tempData[11]; // Buffer temporário para troca de datas
+    TAREFA* tempTarefas; // Buffer temporário para troca de listas de tarefas
 
     for (noAtual = listaData; noAtual != NULL; noAtual = noAtual->prox) {
         noMinimo = noAtual;
 
         for (noComparador = noAtual->prox; noComparador != NULL; noComparador = noComparador->prox) {
-            if (strcmp(noComparador->data, noMinimo->data) < 0) {
+            // Usa compararDatas para determinar a menor data
+            if (compararDatas(noComparador->data, noMinimo->data) < 0) {
                 noMinimo = noComparador;
             }
         }
 
+        // Realiza a troca se necessário
         if (noMinimo != noAtual) {
+            // Troca as datas
             strcpy(tempData, noAtual->data);
             strcpy(noAtual->data, noMinimo->data);
             strcpy(noMinimo->data, tempData);
 
+            // Troca as listas de tarefas associadas
             tempTarefas = noAtual->tarefas;
             noAtual->tarefas = noMinimo->tarefas;
             noMinimo->tarefas = tempTarefas;
+        }
+    }
+}
+
+
+void moverTarefasVencidas(DataTarefa** listaData, DataTarefa** listaPendentesVencidas) {
+    char dataHoje[11];
+    dataAtual(dataHoje);
+
+    DataTarefa* atual = *listaData;
+    DataTarefa* anterior = NULL;
+
+    while (atual != NULL) {
+        if (compararDatas(atual->data, dataHoje) < 0) { // Data da tarefa é anterior à data atual
+            DataTarefa* vencida = atual;
+
+            // Remove o nó da lista original
+            if (anterior == NULL) {
+                *listaData = atual->prox;
+            } else {
+                anterior->prox = atual->prox;
+            }
+
+            atual = atual->prox; // Atualiza o ponteiro atual antes de realocar
+
+            // Insere na lista de pendentes vencidas
+            vencida->prox = *listaPendentesVencidas;
+            *listaPendentesVencidas = vencida;
+
+        } else {
+            anterior = atual;
+            atual = atual->prox;
         }
     }
 }
@@ -338,8 +496,9 @@ void imprimirTarefasPorData(DataTarefa* lista){
         return;
     }
 
+    selectionSort(lista);
     DataTarefa* auxData = lista;
-    selectionSort(auxData);
+    
     while (auxData != NULL){
         printf("---------------------------------------------\n");
         printf("Data: %s\n", auxData->data);

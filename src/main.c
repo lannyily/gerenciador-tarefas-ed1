@@ -14,6 +14,7 @@
 
 int main() {
     DataTarefa* lista = NULL;
+    DataTarefa* listaPendentesVencidas = NULL;
     TarefasConcluidas* historico = criarTC(10);
     TarefasOrdenadas* todasTarefasOrdenadas = NULL;
     Alteracao pilha = {NULL};
@@ -33,6 +34,8 @@ int main() {
         printf(" 9 - Tarefas do dia\n");
         printf("10 - Pesquisar tarefa (String)\n");
         printf("11 - Pesquisar tarefa (Busca binaria)\n");
+        printf("12 - Imprimir tarefas pendentes vencidas\n");
+        printf("13 - Transferir tarefa pra outra data\n");
         printf(" 0 - SAIR\n");
         printf("----------------------------------------------\n");
         printf("Escolha uma opcao: ");
@@ -45,12 +48,15 @@ int main() {
                 char descricao[300];
                 int prioridade;
 
-                printf("Informe a data (no formato dd-mm-yyyy): ");
-                scanf("%10s", data);
+                while(1){
+                    printf("Informe a data (no formato dd-mm-yyyy): ");
+                    scanf("%10s", data);
 
-                if (!verificarData(data)) {
-                    printf("Erro: Data invalida ou em formato incorreto.\n");
-                    return 1;
+                    if (!verificarData(data)){
+                        break;
+                    } else{
+                        printf("Entrada invalida! Tente novamente!\n");
+                    }
                 }
 
                 printf("A Tarefa: ");
@@ -66,29 +72,25 @@ int main() {
 
                 inserirTarefaData(&lista, data, descricao, prioridade, "PENDENTE");
 
+                inserirTarefaData(&lista, "01-11-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "01-10-2025", "Estudar C", 1, "PENDENTE");
+                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
+                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "03-02-2025", "Comprar Material", 3, "PENDENTE");
+                inserirTarefaData(&lista, "03-01-2025", "Planejar Viagem", 1, "PENDENTE");
+                inserirTarefaData(&lista, "28-01-2025", "Planejar Viagem", 1, "PENDENTE");
+
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);
                 break;
             }
             case 2:
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
-
                 printf("------------------ TAREFAS ------------------\n");
                 
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);
                 imprimirTarefasPorData(lista);
                 break;
             case 3: {
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "PENDENTE");
-                
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);
                 imprimirTarefasPorData(lista);
 
                 int idBusca;
@@ -128,17 +130,9 @@ int main() {
             case 6: { 
                 int opcao6;
 
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
-
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);
                 transferirTodasTarefas(lista, &todasTarefasOrdenadas);
-
+                
                 do{
                     printf("------------- TIPOS DE ORDENACAO -------------\n");
                     printf("1 - Ordenar por ID\n");
@@ -173,13 +167,10 @@ int main() {
                 break;
             }
             case 7: { 
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "22-02-2025", "Planejar Viagem", 1, "PENDENTE");
                 int idEditar;
                 char voltar7[10];
 
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);
                 imprimirTarefasPorData(lista);
                 printf("Informe o ID da tarefa a ser editada: ");
                 scanf("%d", &idEditar);
@@ -207,15 +198,6 @@ int main() {
             case 9: { 
                 char opcao[10];
                 int concluirID;
-
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
                 
                 carregartarefasDoDia(lista, &fila);
 
@@ -254,15 +236,7 @@ int main() {
             case 11: {
                 int chave;
 
-                inserirTarefaData(&lista, "21-02-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "21-02-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "22-02-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Estudar C", 1, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Revisar Notas", 2, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Comprar Material", 3, "PENDENTE");
-                inserirTarefaData(&lista, "01-01-2025", "Planejar Viagem", 1, "PENDENTE");
-
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);
                 transferirTodasTarefas(lista, &todasTarefasOrdenadas);
                 insertionSort(&todasTarefasOrdenadas);
                 imprimirTarefasOrdenadas(todasTarefasOrdenadas);
@@ -276,6 +250,23 @@ int main() {
                     printf("Tarefa nao encontrada!\n");
                 }
 
+                break;
+            }
+            case 12:
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);
+                imprimirTarefasVencidas(listaPendentesVencidas);
+                break;
+            case 13: {
+                int idTarefa;
+                char novaData[20];
+
+                printf("Digite o ID da tarefa que deseja transferir: ");
+                scanf("%d", &idTarefa);
+
+                printf("Digite a nova data (dd-mm-aaaa): ");
+                scanf("%s", novaData);
+
+                transferirTarefaParaOutraData(&lista, idTarefa, novaData);
                 break;
             }
             case 0:

@@ -172,7 +172,6 @@ TarefasOrdenadas* mergeSort(TarefasOrdenadas* ordenadas) {
     return mesclar(ordenadas, segundaMetade);
 }
 
-
 void insertionSort(TarefasOrdenadas** todasTarefasOrdenadas){
     if (*todasTarefasOrdenadas == NULL) return;
 

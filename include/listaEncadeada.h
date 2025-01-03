@@ -21,6 +21,8 @@ typedef struct DataTarefa{
     struct DataTarefa* prox;
 }DataTarefa;
 
+void moverTarefasVencidas(DataTarefa** listaData, DataTarefa** listaPendentesVencidas);
+void imprimirTarefasVencidas(DataTarefa* listaPendentesVencidas);
 void selectionSort(DataTarefa* listaData);
 int comparaString(char* nomeBusca, char* nome);
 void buscarTarefaNome(DataTarefa* listaData, char* nomeBusca);
