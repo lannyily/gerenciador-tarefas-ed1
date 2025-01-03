@@ -51,7 +51,6 @@ int buscaBinaria(TarefasOrdenadas* ordenadas, int idBusca){
 TarefasOrdenadas* concatenar(TarefasOrdenadas* menor, TarefasOrdenadas* pivo, TarefasOrdenadas* maior) {
     TarefasOrdenadas* resultado = menor;
 
-    // Conecta a lista "menor" ao pivo
     if (resultado != NULL) {
         TarefasOrdenadas* atual = resultado;
         while (atual->prox != NULL) {
@@ -68,7 +67,7 @@ TarefasOrdenadas* concatenar(TarefasOrdenadas* menor, TarefasOrdenadas* pivo, Ta
     if (maior != NULL) {
         maior->ant = pivo;
     }
-
+    
     return resultado;
 }
 
@@ -116,7 +115,7 @@ TarefasOrdenadas* quickSort(TarefasOrdenadas* ordenadas) {
 
     menor = quickSort(menor);
     maior = quickSort(maior);
-
+    
     return concatenar(menor, pivo, maior);
 }
 

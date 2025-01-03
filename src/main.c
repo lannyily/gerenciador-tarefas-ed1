@@ -160,7 +160,7 @@ int main() {
                             imprimirTarefasOrdenadas(todasTarefasOrdenadas);
                             break;
                         case 3:
-                            quickSort(todasTarefasOrdenadas);
+                            todasTarefasOrdenadas = quickSort(todasTarefasOrdenadas);
                             imprimirTarefasOrdenadas(todasTarefasOrdenadas);
                             break;
                         case 0:
