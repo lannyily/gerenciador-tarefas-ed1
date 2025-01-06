@@ -8,7 +8,7 @@ typedef struct TarefasDoDia TarefasDoDia;
 
 typedef struct TAREFA{
     int id;
-    char descricao[300];
+    char descricao[301];
     int prioridade; // 1 - Alta, 2 - Média e 3 - Baixa
     char status[20]; 
     struct TAREFA* prox;

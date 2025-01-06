@@ -233,8 +233,6 @@ void carregartarefasDoDia(DataTarefa* listaData, TarefasDoDia* fila) {
     char dataHoje[11];
     dataAtual(dataHoje);
 
-    printf("\nTarefas para o dia %s:\n", dataHoje);
-
     DataTarefa* aux = listaData;
     TarefasOrdenadas* listaOrdenada = NULL;
 
@@ -350,37 +348,53 @@ void inserirTarefaData(DataTarefa** listaData, char* data, char* descricao, int 
 TAREFA* removerTarefa(TAREFA* lista, Alteracao* pilha, int idBusca) {
     TAREFA* ant = NULL;
     TAREFA* aux = lista;
-    
-    while (aux != NULL && aux->id != idBusca){
+
+    while (aux != NULL) {
+        if (aux->id == idBusca) {
+            pilhaPush(pilha, aux);
+
+            if (ant == NULL) { 
+                lista = aux->prox;
+            } else {
+                ant->prox = aux->prox;
+            }
+            printf("Tarefa com ID %d removida com sucesso!\n", aux->id);
+            free(aux); 
+            return lista; 
+        }
+
         ant = aux;
         aux = aux->prox;
     }
-    if (aux == NULL) {  
-        printf("Tarefa com ID %d nao encontrada!\n", idBusca);
-        return lista;
-    }
-
-    pilhaPush(pilha, aux);  
-
-    if (ant == NULL) {  
-        lista = aux->prox;
-    } else {  
-        ant->prox = aux->prox;
-    }
-
-    printf("Tarefa com ID %d removida com sucesso!\n", aux->id);
-    free(aux);  
-
     return lista;
+}
+
+int listaTamanho(TAREFA* lista) {
+    int contador = 0;
+    TAREFA* aux = lista;
+
+    while (aux != NULL) {
+        contador++;
+        aux = aux->prox;
+    }
+
+    return contador;
 }
 
 DataTarefa* removerTarefaData(DataTarefa* listaData, Alteracao* pilha, int idBusca) {
     DataTarefa* auxData = listaData;
     DataTarefa* antData = NULL;
+    int tarefaEncontrada = 0; 
 
     while (auxData != NULL) {
+        int tamanhoAnterior = listaTamanho(auxData->tarefas); 
         auxData->tarefas = removerTarefa(auxData->tarefas, pilha, idBusca);
-       
+        int tamanhoAtual = listaTamanho(auxData->tarefas);
+
+        if (tamanhoAnterior != tamanhoAtual) {
+            tarefaEncontrada = 1; 
+        }
+
         if (auxData->tarefas == NULL) {
             if (antData == NULL) {
                 listaData = auxData->prox;
@@ -389,12 +403,15 @@ DataTarefa* removerTarefaData(DataTarefa* listaData, Alteracao* pilha, int idBus
             }
             DataTarefa* temp = auxData;
             auxData = auxData->prox;
-            free(temp); 
+            free(temp);
             printf("Data removida!\n");
         } else {
             antData = auxData;
             auxData = auxData->prox;
         }
+    }
+    if (!tarefaEncontrada) {
+        printf("Tarefa com ID %d nao encontrada em nenhuma data!\n", idBusca);
     }
 
     return listaData;
@@ -403,25 +420,38 @@ DataTarefa* removerTarefaData(DataTarefa* listaData, Alteracao* pilha, int idBus
 void editarTarefa(TAREFA* tarefa) {
     printf("------------- EDITANDO TAREFA %d -------------\n", tarefa->id);
 
-    printf("Digite o novo nome (ou pressione Enter para manter): ");
+   printf("Digite o novo nome (ou pressione Enter para manter): ");
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 
-    char novaDescricao[300];
-    if (fgets(novaDescricao, sizeof(novaDescricao), stdin) != NULL) {
-        novaDescricao[strcspn(novaDescricao, "\n")] = 0; 
-        
-        if (strlen(novaDescricao) > 0) {
-            strcpy(tarefa->descricao, novaDescricao);
+    char novaDescricao[301];  
+    while (1) {
+        if (fgets(novaDescricao, sizeof(novaDescricao), stdin) != NULL) {
+            novaDescricao[strcspn(novaDescricao, "\n")] = 0;  
+
+            if (strlen(novaDescricao) > 300) {
+                printf("A descricao nao pode ter mais que 300 caracteres! Tente novamente! ");
+            } else {
+                strcpy(tarefa->descricao, novaDescricao);
+                break;
+            }
         }
     }
 
-    printf("Digite a nova prioridade (1 - Alta, 2 - Media, 3 - Baixa, ou 0 para manter): ");
     int novaPrioridade;
-    scanf("%d", &novaPrioridade);
-    getchar();  
-    if (novaPrioridade >= 1 && novaPrioridade <= 3) {
-        tarefa->prioridade = novaPrioridade;
+    while (1) {
+        printf("Digite a nova prioridade (1 - Alta, 2 - Media, 3 - Baixa, ou 0 para manter): ");
+        scanf("%d", &novaPrioridade);
+        getchar();  // Limpar o buffer
+
+        if (novaPrioridade >= 1 && novaPrioridade <= 3) {
+            tarefa->prioridade = novaPrioridade;
+            break;  
+        } else if (novaPrioridade == 0) {
+            break; 
+        } else {
+            printf("Prioridade inválida! Digite um valor entre 1 e 3.\n");
+        }
     }
     printf("Tarefa editada com sucesso!\n");
 }
