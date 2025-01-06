@@ -13,15 +13,17 @@
 #include "fila.c"
 
 int main() {
-    DataTarefa* lista = NULL;
-    DataTarefa* listaPendentesVencidas = NULL;
-    TarefasConcluidas* historico = criarTC(10);
-    TarefasOrdenadas* todasTarefasOrdenadas = NULL;
-    Alteracao pilha = {NULL};
-    TarefasDoDia fila = {NULL, NULL};
-    int op;
+    // --- Declaração de variáveis principais do sistema ---
+    DataTarefa* lista = NULL;                       // Lista encadeada para tarefas pendentes
+    DataTarefa* listaPendentesVencidas = NULL;      // Lista encadeada para tarefas pendentes e vencidas
+    TarefasConcluidas* historico = criarTC(10);     // Lista encadeada circular para o histórico de tarefas concluídas
+    TarefasOrdenadas* todasTarefasOrdenadas = NULL; // Lista duplamente encadeada para ordenação de tarefas
+    Alteracao pilha = {NULL};                       // Pilha para desfazer operações (remoção e edição)
+    TarefasDoDia fila = {NULL, NULL};               // Fila para tarefas do dia de hoje
+    int op;     // Opção do menu
 
     do {
+        // --- Exibe o menu principal ---
         printf("-------------------- MENU --------------------\n");
         printf(" 1 - Adicionar tarefa\n");
         printf(" 2 - Imprimir todas as tarefas\n");
@@ -42,12 +44,15 @@ int main() {
         scanf("%d", &op);
         printf("\n");
 
+        // --- Processa a escolha do usuário ---
         switch (op) {
             case 1: {
-                char data[20];
-                char descricao[300];
-                int prioridade;
+                // --- Adicionar uma nova tarefa ---
+                char data[20];          // Data no formato dd-mm-aaaa
+                char descricao[300];    // Descrição da tarefa
+                int prioridade;         // Nível de prioridade (1- Alta, 2- Média, 3- Baixa)
 
+                // --- Solicita a data e valida o formato --- 
                 while(1){
                     printf("Informe a data (no formato dd-mm-yyyy): ");
                     scanf("%10s", data);
@@ -59,6 +64,7 @@ int main() {
                     }
                 }
 
+                // --- Solicita e valida a descrição ---
                 while (1) {
                     printf("A Tarefa: ");
                     scanf(" %[^\n]", descricao); 
@@ -70,6 +76,7 @@ int main() {
                     }
                 }
 
+                 // --- Solicita e valida o nível de prioridade ---
                 while (1)
                 {
                     printf("Nivel de prioridade (1 - Alta | 2 - Media | 3 - Baixa): ");
@@ -82,8 +89,10 @@ int main() {
                     }
                 }
 
+                // --- Insere a nova tarefa na lista de pendentes ---
                 inserirTarefaData(&lista, data, descricao, prioridade, "PENDENTE");
 
+                // --- Exemplo de tarefas predefinidas para testes ---
                 inserirTarefaData(&lista, "05-01-2025", "Planejar Roteiro de Viagem para o Fim de Ano", 1, "PENDENTE");
                 inserirTarefaData(&lista, "05-01-2025", "Estudar Conceitos Avancados de C", 2, "PENDENTE");
                 inserirTarefaData(&lista, "06-01-2025", "Estudar Programacao em C", 1, "PENDENTE");
@@ -144,47 +153,52 @@ int main() {
                 inserirTarefaData(&lista, "06-03-2025", "Planejar Investimentos a Curto Prazo", 1, "PENDENTE");
                 inserirTarefaData(&lista, "06-03-2025", "Comprar Suprimentos para o Escritorio", 2, "PENDENTE");
 
-                moverTarefasVencidas(&lista, &listaPendentesVencidas);
-                carregartarefasDoDia(lista, &fila);
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);  // Atualiza as tarefas vencidas 
+                carregartarefasDoDia(lista, &fila);                     // Transfere tarefas do dia
                 break;
             }
             case 2:
+                 // --- Imprime todas as tarefas pendentes organizadas por data ---
                 printf("------------------ TAREFAS ------------------\n");
                 
-                moverTarefasVencidas(&lista, &listaPendentesVencidas);
-                imprimirTarefasPorData(lista);
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);  // Atualiza as tarefas vencidas 
+                imprimirTarefasPorData(lista);                          // Imprime todas as tarefas pendentes 
                 break;
             case 3: {
-                moverTarefasVencidas(&lista, &listaPendentesVencidas);
-                imprimirTarefasPorData(lista);
+                // --- Remove uma tarefa da lista por ID ---
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);  // Atualiza as tarefas vencidas 
+                imprimirTarefasPorData(lista);                          // Imprime todas as tarefas pendentes
 
-                int idBusca;
+                int idBusca; // ID da busca para a remoção
                 
                 printf("Informe o id da tarefa que deseja remover: ");
                 scanf("%d", &idBusca);
 
-                lista = removerTarefaData(lista, &pilha, idBusca);
+                lista = removerTarefaData(lista, &pilha, idBusca);      // Remover a tarefa
 
                 break;
             }
             case 4: { 
-                int idConcluida;
+                // --- Marca uma tarefa como concluída ---
+                int idConcluida;    // ID da busca para concluir a tarefa
 
-                imprimirTarefasPorData(lista);
+                imprimirTarefasPorData(lista);      // Imprime todas as tarefas pendentes
                 printf("Informe o ID da tarefa: ");
                 scanf("%d", &idConcluida);
-                concluirTarefa(&lista, historico, idConcluida);;
+                concluirTarefa(&lista, historico, idConcluida); // Concluir a tarefa
                 break;
             }
             case 5: { 
-                imprimirTC(historico);
+                // --- Imprime o histórico de tarefas concluída ---
+                imprimirTC(historico);      // Imprime as tarefas concluidas
                 break;
             }
             case 6: { 
+                // --- Opções para ordenar todas as tarefas ---
                 int opcao6;
 
-                moverTarefasVencidas(&lista, &listaPendentesVencidas);
-                transferirTodasTarefas(lista, &todasTarefasOrdenadas);
+                moverTarefasVencidas(&lista, &listaPendentesVencidas);      // Atualiza as tarefas vencidas
+                transferirTodasTarefas(lista, &todasTarefasOrdenadas);      // Transfere todas as tarefas para a lista duplamente encadeada
                 
                 do{
                     printf("------------- TIPOS DE ORDENACAO -------------\n");
@@ -199,14 +213,17 @@ int main() {
 
                     switch (opcao6){
                         case 1:
+                            // --- Ordena por ID (Insertion Sort) ---
                             insertionSort(&todasTarefasOrdenadas);
                             imprimirTarefasOrdenadas(todasTarefasOrdenadas);
                             break;
                         case 2:
+                            // --- Ordena por prioridade crescente (MergeSort) ---
                             mergeSort(todasTarefasOrdenadas);
                             imprimirTarefasOrdenadas(todasTarefasOrdenadas);
                             break;
                         case 3:
+                            // --- Ordena por prioridade decrescente (QuickSort) ---
                             todasTarefasOrdenadas = quickSort(todasTarefasOrdenadas);
                             imprimirTarefasOrdenadas(todasTarefasOrdenadas);
                             break;
@@ -220,6 +237,7 @@ int main() {
                 break;
             }
             case 7: { 
+                // --- Editar uma tarefa existente ---
                 int idEditar;
 
                 moverTarefasVencidas(&lista, &listaPendentesVencidas);
@@ -227,14 +245,16 @@ int main() {
                 printf("Informe o ID da tarefa a ser editada: ");
                 scanf("%d", &idEditar);
 
-                buscarTarefa(lista, &pilha, idEditar);
+                buscarTarefa(lista, &pilha, idEditar); // Buscar e editar a tarefa correspondente
 
                 break;
             }
             case 8:
+                // --- Desfaz a última operação realizada utilizando a pilha ---
                 desfazerAlteracao(lista, &pilha);
                 break;
             case 9: { 
+                // --- Imprime as tarefas agendadas para o dia atual ---
                 if (contarTarefasNaFila(&fila) > 0){ 
                     imprimirTarefasDoDia(&fila);
                 } else {
@@ -243,24 +263,27 @@ int main() {
                 break;
             }
             case 10: { 
+                // --- Pesquisa uma tarefa pelo nome (nome completo) ---
                 char buscarTarefa[300];
                 printf("Digite a tarefa: ");
                 scanf(" %[^\n]", buscarTarefa);
 
-                buscarTarefaNome(lista, buscarTarefa);
+                buscarTarefaNome(lista, buscarTarefa);  // Realiza a busca por nome na lista de tarefas
                 break;
             }
             case 11: {
+                // --- Busca uma tarefa específica pelo ID usando busca binária ---
                 int chave;
 
                 moverTarefasVencidas(&lista, &listaPendentesVencidas);
                 transferirTodasTarefas(lista, &todasTarefasOrdenadas);
-                insertionSort(&todasTarefasOrdenadas);
-                imprimirTarefasOrdenadas(todasTarefasOrdenadas);
+                insertionSort(&todasTarefasOrdenadas);                  // Ordena a lista de tarefas para busca binária
+                imprimirTarefasOrdenadas(todasTarefasOrdenadas);        // Imprime a lista ordenada
                 
                 printf("Digite o ID que deseja buscar: ");
                 scanf("%d", &chave);
 
+                // Realiza a busca binária e informa o resultado
                 if (buscaBinaria(todasTarefasOrdenadas, chave)){
                     printf("Tarefa encontrada!\n");
                 } else {
@@ -270,10 +293,12 @@ int main() {
                 break;
             }
             case 12:
+                // --- Imprime a lista de tarefas vencidas --- 
                 moverTarefasVencidas(&lista, &listaPendentesVencidas);
                 imprimirTarefasVencidas(listaPendentesVencidas);
                 break;
             case 13: {
+                // --- Transfere uma tarefa para uma nova data ---
                 int idTarefa;
                 char novaData[20];
 
@@ -283,19 +308,21 @@ int main() {
                 printf("Digite a nova data (dd-mm-aaaa): ");
                 scanf("%s", novaData);
 
-                transferirTarefaParaOutraData(&lista, idTarefa, novaData);
+                transferirTarefaParaOutraData(&lista, idTarefa, novaData);  // Realiza a transferência da tarefa para a nova data
                 break;
             }
             case 0:
+                // --- Finaliza o programa e libera todos os recursos alocados dinamicamente ---
                 printf("Saindo do programa...\n");
                 liberarTarefaData(lista);
                 liberarTC(historico);
                 liberarTarefasOrdenadas(todasTarefasOrdenadas);
                 liberarAlteracao(&pilha);
                 liberarTarefasDoDia(&fila);
-                exit(0); 
+                exit(0);    // Encerra o programa
                 break;
             default:
+                // --- Caso o usuário insira uma opção inválida ---
                 printf("Opcao invalida, tente novamente!\n");
         }
     } while (op != 0);

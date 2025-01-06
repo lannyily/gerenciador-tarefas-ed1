@@ -7,7 +7,7 @@
 TarefasConcluidas* criarTC(int capacidade){
     TarefasConcluidas* concluidas = (TarefasConcluidas*)malloc(sizeof(TarefasConcluidas));
     if (!concluidas){
-        exit(1);
+        exit(1);            // Se a alocação falhar, encerra o programa
     }
     concluidas->tarefaMaisAntiga = NULL;
     concluidas->tarefaMaisRecente = NULL;
@@ -16,30 +16,32 @@ TarefasConcluidas* criarTC(int capacidade){
     return concluidas;
 }
 
-void addTarefaConcluida(TarefasConcluidas* concluidas, TAREFA* lista) {
+void addTarefaConcluida(TarefasConcluidas* concluidas, TAREFA* lista){
     if (concluidas->tarefaMaisAntiga == NULL) {
-        // Primeira tarefa a ser adicionada
+        // Caso a lista esteja vazia, adiciona a primeira tarefa
         concluidas->tarefaMaisAntiga = lista;
         concluidas->tarefaMaisRecente = lista;
-        lista->prox = lista; // Lista circular
-        concluidas->tamanho++;
+        lista->prox = lista;    // A tarefa aponta para ela mesma, formando a lista circular
+        concluidas->tamanho++;  // Incrementa o tamanho
         return;
     }
 
-    if (concluidas->tamanho < concluidas->capacidade) {
-        // Adiciona ao final da lista circular
+    if(concluidas->tamanho < concluidas->capacidade) {
+        // Caso a lista ainda tenha espaço, adiciona a nova tarefa
         lista->prox = concluidas->tarefaMaisAntiga;
         concluidas->tarefaMaisRecente->prox = lista;
         concluidas->tarefaMaisRecente = lista;
         concluidas->tamanho++;
-    } else {
-        // Substitui a tarefa mais antiga
+    } 
+    
+    else {
+        // Caso a lista esteja cheia, remove a tarefa mais antiga e adiciona a nova tarefa
         TAREFA* antiga = concluidas->tarefaMaisAntiga;
-        concluidas->tarefaMaisAntiga = antiga->prox; // Atualiza a mais antiga
-        concluidas->tarefaMaisRecente->prox = lista; // Conecta a nova ao final
-        lista->prox = concluidas->tarefaMaisAntiga;  // Conecta a nova ao início
-        concluidas->tarefaMaisRecente = lista;      // Atualiza a mais recente
-        free(antiga); // Libera memória da tarefa mais antiga
+        concluidas->tarefaMaisAntiga = antiga->prox; 
+        concluidas->tarefaMaisRecente->prox = lista; 
+        lista->prox = concluidas->tarefaMaisAntiga;  
+        concluidas->tarefaMaisRecente = lista;      
+        free(antiga);   // Libera a memória da tarefa removida
     }
 }
 
@@ -58,7 +60,7 @@ void imprimirTC(TarefasConcluidas* concluidas){
         printf(" ID: %d\n Tarefa: %s\n Prioridade: %d\n Status: %s\n\n", 
             atual->id, atual->descricao, atual->prioridade, atual->status);
         atual = atual->prox;
-    } while (atual != inicial);
+    } while (atual != inicial);     // Itera pela lista circular até voltar à tarefa inicial
 
 }
 
@@ -72,10 +74,10 @@ void liberarTC(TarefasConcluidas* concluidas) {
     TAREFA* proximo;
 
     do {
-        proximo = atual->prox;
+        proximo = atual->prox;      // Guarda o próximo elemento
         free(atual);
         atual = proximo;
-    } while (atual != concluidas->tarefaMaisAntiga);
+    } while (atual != concluidas->tarefaMaisAntiga);    // Itera pela lista circular até voltar à tarefa inicial
 
     free(concluidas);
 }

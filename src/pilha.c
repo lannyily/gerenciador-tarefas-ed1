@@ -10,101 +10,99 @@ void pilhaPush(Alteracao* pilha, TAREFA* tarefaOriginal){
 
     if (novaTarefa == NULL) return;
 
-    *novaTarefa = *tarefaOriginal;
-    novaTarefa->prox = pilha->primeiro;
-    pilha->primeiro = novaTarefa;
+    *novaTarefa = *tarefaOriginal;      // Copia os dados da tarefa original para a nova tarefa
+    novaTarefa->prox = pilha->primeiro; // Aponta o próximo da nova tarefa para o topo da pilha
+    pilha->primeiro = novaTarefa;       // Atualiza o topo da pilha para a nova tarefa
 }
 
 TAREFA* pilhaPop(Alteracao* pilha){
     if (pilha->primeiro == NULL) return NULL;
 
-    TAREFA* topo = pilha->primeiro;
-    pilha->primeiro = topo->prox;
+    TAREFA* topo = pilha->primeiro;     // Armazena o topo da pilha  
+    pilha->primeiro = topo->prox;       // Atualiza o topo da pilha para o próximo nó
     return topo;
 }
 
-void idParaData(int id, char* data) {
-    int dia = id / 1000;
-    int mes = (id % 1000) / 100;
-    sprintf(data, "%02d-%02d-2025", dia, mes);  // Formata a data com o ano de 2025
+void idParaData(int id, char* data){
+    int dia = id / 1000;                        // Extrai o dia do ID
+    int mes = (id % 1000) / 100;                // Extrai o mês do ID
+    sprintf(data, "%02d-%02d-2025", dia, mes);  // Formata a data como string
 }
 
 DataTarefa* desfazerAlteracao(DataTarefa* listaData, Alteracao* pilha) { 
-    TAREFA* tarefaRestaurada = pilhaPop(pilha);
+    TAREFA* tarefaRestaurada = pilhaPop(pilha);         // Remove a última tarefa da pilha
     if (tarefaRestaurada == NULL) {
-        printf("Nenhuma alteração para desfazer!\n");
-        return listaData;
+        printf("Nenhuma alteracao para desfazer!\n");
+        return listaData;                               // Se a pilha estiver vazia, não há o que desfazer
     }
 
-    // Extrair a data do ID
     char dataExtraida[11];
-    idParaData(tarefaRestaurada->id, dataExtraida);
+    idParaData(tarefaRestaurada->id, dataExtraida);     // Converte o ID para data
 
-    // Procurar a data correspondente
     DataTarefa* auxData = listaData;
     DataTarefa* anteriorData = NULL;
 
+    // Procura pela data correspondente na lista de datas
     while (auxData != NULL) {
         if (strcmp(auxData->data, dataExtraida) == 0) {
-            break; // Encontrou a data
+            break;                                      // Se a data for encontrada, sai do loop
         }
         anteriorData = auxData;
         auxData = auxData->prox;
     }
 
-    // Se a data não existir, criar uma nova
+    // Se a data não foi encontrada, cria uma nova data
     if (auxData == NULL) {
-        printf("Data %s não encontrada! Criando nova data...\n", dataExtraida);
+        printf("Data %s nao encontrada! Criando nova data...\n", dataExtraida);
         auxData = (DataTarefa*)malloc(sizeof(DataTarefa));
         if (!auxData) {
-            printf("Erro ao alocar memória para nova data!\n");
-            free(tarefaRestaurada);
+            free(tarefaRestaurada);                     // Libera a memória da tarefa restaurada
             return listaData;
         }
 
-        strcpy(auxData->data, dataExtraida);
+        strcpy(auxData->data, dataExtraida);            // Atribui a data à nova data
         auxData->tarefas = NULL;
         auxData->cont = 0;
         auxData->prox = NULL;
 
-        // Inserir nova data na lista de datas
         if (anteriorData == NULL) {
-            listaData = auxData;
+            listaData = auxData;                        // Se a lista estiver vazia, a nova data será a primeira
         } else {
-            anteriorData->prox = auxData;
+            anteriorData->prox = auxData;               // Caso contrário, insere a nova data na lista
         }
     }
 
-    // Verificar se já existe uma tarefa com o mesmo ID
-    TAREFA* atual = auxData->tarefas;
+    TAREFA* atual = auxData->tarefas;                   // Inicia a busca pela tarefa na data correspondente
     TAREFA* anterior = NULL;
 
-    while (atual != NULL) {
+    // Procura pela tarefa com o mesmo ID da tarefa restaurada
+    while (atual != NULL) 
+    {
         if (atual->id == tarefaRestaurada->id) {
             printf("Substituindo tarefa existente com ID %d.\n", atual->id);
 
-            // Substituir a tarefa existente
+            // Substitui a tarefa existente pela restaurada
             if (anterior == NULL) {
                 auxData->tarefas = tarefaRestaurada;
             } else {
                 anterior->prox = tarefaRestaurada;
             }
             tarefaRestaurada->prox = atual->prox;
-            free(atual); // Liberar a memória da tarefa antiga
+            free(atual); 
             printf("Tarefa com ID %d substituída na data %s!\n", tarefaRestaurada->id, auxData->data);
-            return listaData;
+            return listaData;                           // Retorna a lista com a tarefa substituída
         }
         anterior = atual;
         atual = atual->prox;
     }
 
-    // Caso não exista, inserir no início da lista de tarefas
+    // Caso a tarefa não tenha sido encontrada, insere a tarefa restaurada no início da lista de tarefas
     tarefaRestaurada->prox = auxData->tarefas;
     auxData->tarefas = tarefaRestaurada;
     auxData->cont++;
     printf("Tarefa com ID %d restaurada na data %s!\n", tarefaRestaurada->id, auxData->data);
 
-    return listaData;
+    return listaData;           // Retorna a lista com a tarefa restaurada
 }
 
 void liberarAlteracao(Alteracao* pilha) {
