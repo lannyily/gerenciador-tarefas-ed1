@@ -8,7 +8,7 @@
 TarefasOrdenadas* meio(TarefasOrdenadas* inicio, TarefasOrdenadas* fim){
     if (inicio == NULL) return NULL;
 
-    if (inicio == fim) return inicio;       // Se o início e o fim são o mesmo, retorna o nó inicial
+    if (inicio == fim) return inicio;      
 
     TarefasOrdenadas* lento = inicio;
     TarefasOrdenadas* rapido = inicio->prox;
@@ -36,10 +36,10 @@ int buscaBinaria(TarefasOrdenadas* ordenadas, int idBusca){
             printf("\n----------------- TAREFA %d -----------------\n", idBusca);
             printf("ID: %d\nTarefa: %s\nPrioridade: %d\nStatus: %s\n\n",
                 meioLista->tarefa->id, meioLista->tarefa->descricao, meioLista->tarefa->prioridade, meioLista->tarefa->status);
-            return 1;                               // Retorna 1 se a tarefa foi encontrada
+            return 1;                               
         } 
         else if (inicio == fim){
-            break;                                  // Se chegou ao fim da lista, sai do loop
+            break;                                  
         } 
         else if (meioLista->tarefa->id < idBusca){  // Se o ID da tarefa no meio for menor que o ID procurado
             inicio = meioLista->prox;               // Move o início para a parte maior
@@ -48,7 +48,7 @@ int buscaBinaria(TarefasOrdenadas* ordenadas, int idBusca){
             fim = meioLista;                        // Move o fim para a parte menor
         }
     }
-    return 0;                                       // Retorna 0 se a tarefa não for encontrada
+    return 0;                                       
 }
 
 TarefasOrdenadas* concatenar(TarefasOrdenadas* menor, TarefasOrdenadas* pivo, TarefasOrdenadas* maior) {
@@ -57,21 +57,21 @@ TarefasOrdenadas* concatenar(TarefasOrdenadas* menor, TarefasOrdenadas* pivo, Ta
     if (resultado != NULL) {
         TarefasOrdenadas* atual = resultado;
         while (atual->prox != NULL) {
-            atual = atual->prox;        // Vai até o final da lista 'menor'
+            atual = atual->prox;        // Vai até o final da lista menor
         }
         atual->prox = pivo;             // Concatena o pivo no final da lista
-        pivo->ant = atual;              // Ajusta o ponteiro 'ant' do pivo
+        pivo->ant = atual;              // Ajusta o ponteiro ant do pivo
     } else {
-        resultado = pivo;               // Se 'menor' for NULL, o resultado é o pivo
+        resultado = pivo;               // Se menor for NULL, o resultado é o pivo
     }
 
    
-    pivo->prox = maior;                 // Concatena a lista 'maior' após o pivo
+    pivo->prox = maior;                 // Concatena a lista maior após o pivo
     if(maior != NULL) {
-        maior->ant = pivo;              // Ajusta o ponteiro 'ant' da lista 'maior'
+        maior->ant = pivo;              // Ajusta o ponteiro ant da lista maior
     }
     
-    return resultado;                   // Retorna a lista concatenada
+    return resultado;                   
 }
 
 TarefasOrdenadas* particionar(TarefasOrdenadas* ordenadas, TarefasOrdenadas** menor, TarefasOrdenadas** maior) {
@@ -120,8 +120,8 @@ TarefasOrdenadas* quickSort(TarefasOrdenadas* ordenadas) {
     TarefasOrdenadas *menor, *maior;
     TarefasOrdenadas* pivo = particionar(ordenadas, &menor, &maior); // Particionar a lista de tarefas
 
-    menor = quickSort(menor);                   // Ordena a lista 'menor'
-    maior = quickSort(maior);                   // Ordena a lista 'maior'
+    menor = quickSort(menor);                   // Ordena a lista menor
+    maior = quickSort(maior);                   // Ordena a lista maior
     
     return concatenar(menor, pivo, maior);      // Concatena as listas ordenadas
 }
@@ -166,7 +166,7 @@ TarefasOrdenadas* dividir(TarefasOrdenadas* ordenadas) {
     }
     meio->prox = NULL;                              // Desconecta a primeira metade da lista
 
-    return segundaMetade;                           // Retorna a segunda metade da lista
+    return segundaMetade;                          
 }
 
 TarefasOrdenadas* mergeSort(TarefasOrdenadas* ordenadas) {
@@ -177,7 +177,7 @@ TarefasOrdenadas* mergeSort(TarefasOrdenadas* ordenadas) {
     ordenadas = mergeSort(ordenadas);                       // Ordena a primeira metade
     segundaMetade = mergeSort(segundaMetade);               // Ordena a segunda metade
 
-    return mesclar(ordenadas, segundaMetade);               // Mescla as duas metades ordenadas
+    return mesclar(ordenadas, segundaMetade);              
 }
 
 
@@ -259,7 +259,7 @@ void bubblesort(TarefasOrdenadas* ordenadas) {
                 *(noAtual->tarefa) = *(noProximo->tarefa);
                 *(noProximo->tarefa) = tempTarefa;
 
-                troca = 1;  // Indica que houve uma troca
+                troca = 1;  
             }
             noAtual = noAtual->prox;
         }

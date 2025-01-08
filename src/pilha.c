@@ -10,9 +10,9 @@ void pilhaPush(Alteracao* pilha, TAREFA* tarefaOriginal){
 
     if (novaTarefa == NULL) return;
 
-    *novaTarefa = *tarefaOriginal;      // Copia os dados da tarefa original para a nova tarefa
-    novaTarefa->prox = pilha->primeiro; // Aponta o próximo da nova tarefa para o topo da pilha
-    pilha->primeiro = novaTarefa;       // Atualiza o topo da pilha para a nova tarefa
+    *novaTarefa = *tarefaOriginal;      
+    novaTarefa->prox = pilha->primeiro; 
+    pilha->primeiro = novaTarefa;       
 }
 
 TAREFA* pilhaPop(Alteracao* pilha){
@@ -66,13 +66,13 @@ DataTarefa* desfazerAlteracao(DataTarefa* listaData, Alteracao* pilha) {
         auxData->prox = NULL;
 
         if (anteriorData == NULL) {
-            listaData = auxData;                        // Se a lista estiver vazia, a nova data será a primeira
+            listaData = auxData;                       
         } else {
-            anteriorData->prox = auxData;               // Caso contrário, insere a nova data na lista
+            anteriorData->prox = auxData;               
         }
     }
 
-    TAREFA* atual = auxData->tarefas;                   // Inicia a busca pela tarefa na data correspondente
+    TAREFA* atual = auxData->tarefas;                   // Inicia a busca pela tarefa na data 
     TAREFA* anterior = NULL;
 
     // Procura pela tarefa com o mesmo ID da tarefa restaurada

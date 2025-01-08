@@ -321,8 +321,9 @@ DataTarefa* removerTarefaData(DataTarefa* listaData, Alteracao* pilha, int idBus
  * 
  * Parâmetros:
  *      Ponteiro para a tarefa a ser editada.
+ *      Descrição antiga da tarefa.
  */
-void editarTarefa(TAREFA* tarefa);
+void editarTarefa(TAREFA* tarefa, char* descricaoAtual);
 
 /**
  * Busca uma tarefa pelo ID na lista de tarefas.

@@ -7,7 +7,7 @@
 TarefasConcluidas* criarTC(int capacidade){
     TarefasConcluidas* concluidas = (TarefasConcluidas*)malloc(sizeof(TarefasConcluidas));
     if (!concluidas){
-        exit(1);            // Se a alocação falhar, encerra o programa
+        exit(1);            
     }
     concluidas->tarefaMaisAntiga = NULL;
     concluidas->tarefaMaisRecente = NULL;
@@ -21,8 +21,8 @@ void addTarefaConcluida(TarefasConcluidas* concluidas, TAREFA* lista){
         // Caso a lista esteja vazia, adiciona a primeira tarefa
         concluidas->tarefaMaisAntiga = lista;
         concluidas->tarefaMaisRecente = lista;
-        lista->prox = lista;    // A tarefa aponta para ela mesma, formando a lista circular
-        concluidas->tamanho++;  // Incrementa o tamanho
+        lista->prox = lista;    
+        concluidas->tamanho++;  
         return;
     }
 
@@ -41,7 +41,7 @@ void addTarefaConcluida(TarefasConcluidas* concluidas, TAREFA* lista){
         concluidas->tarefaMaisRecente->prox = lista; 
         lista->prox = concluidas->tarefaMaisAntiga;  
         concluidas->tarefaMaisRecente = lista;      
-        free(antiga);   // Libera a memória da tarefa removida
+        free(antiga);  
     }
 }
 

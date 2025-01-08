@@ -245,7 +245,7 @@ int main() {
                 printf("Informe o ID da tarefa a ser editada: ");
                 scanf("%d", &idEditar);
 
-                buscarTarefa(lista, &pilha, idEditar); // Buscar e editar a tarefa correspondente
+                buscarTarefa(lista, &pilha, idEditar); // Buscar e editar a tarefa 
 
                 break;
             }
