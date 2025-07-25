@@ -1,21 +1,92 @@
-# Gerenciador de Tarefas em C 
+# Gerenciador de Tarefas em C
 
-Este projeto foi desenvolvido como trabalho final da disciplina de **Estrutura de Dados 1** e tem como objetivo a criação de um **sistema de gerenciamento de tarefas**. O sistema permite que tarefas sejam atribuídas a diferentes usuários, levando em consideração **prioridades e deadlines**. Além disso, os usuários podem organizar e buscar suas tarefas de diversas maneiras.  
+Projeto desenvolvido como trabalho final da disciplina **Estrutura de Dados I**, com o objetivo de implementar um sistema completo de gerenciamento de tarefas, utilizando diversas estruturas de dados clássicas da linguagem C.
 
-## Funcionalidades e Estruturas Utilizadas  
+## Funcionalidades
 
-1. **Lista Encadeada:** As tarefas são armazenadas em uma lista encadeada básica, onde cada nó representa uma tarefa contendo informações como nome, prioridade e deadline.  
+O sistema permite que tarefas sejam:
 
-2. **Lista Encadeada Circular:** Para manter um histórico das tarefas concluídas, foi implementada uma lista encadeada circular com capacidade limitada (por exemplo, armazenando as últimas 10 tarefas finalizadas).  
+* Criadas, editadas, concluídas e removidas
+* Organizadas por data, prioridade e estado
+* Buscadas por palavra-chave ou ID (busca binária)
+* Transferidas para outra data
+* Desfeitas (última operação)
+* Visualizadas por dia, vencidas ou completas
 
-3. **Lista Duplamente Encadeada:** Utilizada para organizar tarefas por prioridade, permitindo a reordenação dinâmica com base em critérios definidos.  
+## Estruturas de Dados Utilizadas
 
-4. **Pilha:** Permite desfazer uma ação recente, como reverter a remoção de uma tarefa ou a alteração de sua prioridade.  
+* **Lista Encadeada**: Armazena as tarefas pendentes.
+* **Lista Encadeada Circular**: Guarda o histórico das 10 últimas tarefas concluídas.
+* **Lista Duplamente Encadeada**: Utilizada para ordenações por prioridade.
+* **Pilha**: Implementa a funcionalidade de “desfazer” ações.
+* **Fila**: Armazena as tarefas do dia, organizadas por chegada.
+* **Recursividade**: Utilizada em buscas por palavra-chave.
+* **Ordenações**: Insertion Sort, Merge Sort e Quick Sort aplicadas em tarefas.
+* **Busca Binária**: Usada para encontrar tarefas específicas por ID após ordenação.
 
-5. **Fila:** Gerencia uma fila de tarefas pendentes, organizando-as pela ordem de chegada ou outro critério.  
+## Estrutura de Pastas
 
-6. **Recursividade:** Implementação de uma funcionalidade de busca recursiva para localizar tarefas específicas com base em palavras-chave no nome ou descrição.  
+```bash
+.
+├── include/            # Arquivos de cabeçalho (.h)
+│   ├── fila.h
+│   ├── listaCircular.h
+│   ├── listaDuplamente.h
+│   ├── listaEncadeada.h
+│   └── pilha.h
+├── src/                # Implementações (.c)
+│   ├── fila.c
+│   ├── listaCircular.c
+│   ├── listaDuplamente.c
+│   ├── listaEncadeada.c
+│   ├── main.c
+│   └── pilha.c
+├── output/             # Saída de testes ou execução
+└── README.md
+```
 
-7. **Algoritmos de Ordenação:** As tarefas podem ser ordenadas de diferentes maneiras (por data de criação, prioridade, etc.), utilizando diversos algoritmos de ordenação, que devem ser aplicados pelo menos uma vez no projeto.  
+---
 
-8. **Algoritmos de Busca:** Após a ordenação das tarefas, a busca binária é utilizada para localizar rapidamente uma tarefa específica.  
+## Menu de Funcionalidades (`main.c`)
+
+O sistema possui um menu interativo com as seguintes opções:
+
+```
+1 - Adicionar tarefa
+2 - Imprimir todas as tarefas
+3 - Remover tarefa
+4 - Concluir uma tarefa
+5 - Histórico de tarefas concluídas
+6 - Ordenar tarefas (ID, prioridade crescente/decrescente)
+7 - Editar tarefa
+8 - Desfazer última operação
+9 - Ver tarefas do dia
+10 - Buscar tarefa (por nome)
+11 - Buscar tarefa (busca binária)
+12 - Ver tarefas vencidas
+13 - Transferir tarefa para outra data
+0 - Sair
+```
+
+---
+
+## Como Executar
+
+### Compilação
+
+Você pode compilar o projeto com `gcc` diretamente:
+
+```bash
+gcc -o tarefas src/*.c -Iinclude
+```
+
+### Execução
+
+```bash
+./tarefas
+```
+
+## Autoria
+
+Desenvolvido por Erlanny Rodrigues — Disciplina de Estrutura de Dados I
+Curso de Sistemas de Informação - UFPI - CSHNB
