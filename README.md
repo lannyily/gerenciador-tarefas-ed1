@@ -45,8 +45,6 @@ O sistema permite que tarefas sejam:
 └── README.md
 ```
 
----
-
 ## Menu de Funcionalidades (`main.c`)
 
 O sistema possui um menu interativo com as seguintes opções:
@@ -67,8 +65,6 @@ O sistema possui um menu interativo com as seguintes opções:
 13 - Transferir tarefa para outra data
 0 - Sair
 ```
-
----
 
 ## Como Executar
 
