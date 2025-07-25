@@ -85,4 +85,5 @@ gcc -o tarefas src/*.c -Iinclude
 ## Autoria
 
 Desenvolvido por Erlanny Rodrigues — Disciplina de Estrutura de Dados I
+
 Curso de Sistemas de Informação - UFPI - CSHNB
